@@ -4,7 +4,7 @@ import UniqLogo from './UniqLogo.jsx';
 
 const navLinks = [
   { label: 'Servicios', href: '#servicios' },
-  { label: 'Turnos', href: '#turnos' },
+  { label: 'Turnos', href: '#servicios' },
   { label: 'Galería', href: '#galeria-puente', special: true },
   { label: 'Reseñas', href: '#resenas' },
   { label: 'Productos', href: '#productos' },

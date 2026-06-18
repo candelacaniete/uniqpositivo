@@ -3,15 +3,17 @@
 
 :root {
   color-scheme: light;
-  --color-ink: #F7F1E8;
-  --color-night: #FFF9F1;
-  --color-cream: #241F1B;
-  --color-warm: #EFE2D1;
-  --color-ash: #746A62;
-  --color-line: #E2D3C4;
-  --accent-orange: #9B4F35;
-  --accent-magenta: #C98763;
-  --accent-violet: #D8B98C;
+  --color-ink: #E8D3B6;
+  --color-night: #F4E7D2;
+  --color-cream: #241913;
+  --color-warm: #C9AA82;
+  --color-ash: #685747;
+  --color-line: #A47F5F;
+  --color-moss: #43513A;
+  --color-earth: #241913;
+  --accent-orange: #8F4A2F;
+  --accent-magenta: #43513A;
+  --accent-violet: #C59A62;
   --accent-gradient: linear-gradient(135deg, var(--accent-orange), var(--accent-magenta), var(--accent-violet));
 }
 
@@ -27,11 +29,12 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    radial-gradient(circle at 12% 12%, rgba(216, 185, 140, 0.22), transparent 22rem),
-    radial-gradient(circle at 82% 8%, rgba(155, 79, 53, 0.11), transparent 20rem),
+    radial-gradient(circle at 8% 4%, rgba(67, 81, 58, 0.28), transparent 24rem),
+    radial-gradient(circle at 86% 10%, rgba(143, 74, 47, 0.2), transparent 22rem),
+    radial-gradient(circle at 42% 92%, rgba(197, 154, 98, 0.26), transparent 28rem),
     var(--color-ink);
   color: var(--color-cream);
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
 }
 
@@ -41,12 +44,13 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 60;
-  opacity: 0.24;
+  opacity: 0.34;
   mix-blend-mode: multiply;
   background-image:
-    linear-gradient(rgba(89, 68, 52, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(89, 68, 52, 0.03) 1px, transparent 1px);
-  background-size: 3px 3px, 5px 5px;
+    radial-gradient(circle at 20% 30%, rgba(36, 25, 19, 0.08) 0 1px, transparent 1px),
+    radial-gradient(circle at 70% 60%, rgba(67, 81, 58, 0.06) 0 1px, transparent 1px),
+    linear-gradient(rgba(89, 68, 52, 0.03) 1px, transparent 1px);
+  background-size: 7px 7px, 11px 11px, 4px 4px;
 }
 
 button,
@@ -57,10 +61,8 @@ select {
 }
 
 .accent-text {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-moss);
+  text-shadow: 0 12px 34px rgba(67, 81, 58, 0.16);
 }
 
 .accent-border {
@@ -88,13 +90,7 @@ select {
 }
 
 .brand-logo-glow {
-  filter: drop-shadow(0 12px 20px rgba(68, 48, 35, 0.14));
-}
-
-.brand-logo-hero {
-  filter:
-    drop-shadow(0 18px 34px rgba(68, 48, 35, 0.14))
-    drop-shadow(0 0 28px rgba(216, 185, 140, 0.22));
+  filter: drop-shadow(0 12px 22px rgba(36, 25, 19, 0.16));
 }
 
 .section-shell {
@@ -106,7 +102,7 @@ select {
 .decor-butterfly {
   pointer-events: none;
   position: absolute;
-  opacity: 0.12;
+  opacity: 0.18;
   filter: blur(0.2px);
 }
 
@@ -114,7 +110,7 @@ select {
   width: 12rem;
   height: 12rem;
   border-radius: 999px;
-  border: 1px solid rgba(36, 31, 27, 0.18);
+  border: 1px solid rgba(67, 81, 58, 0.22);
 }
 
 .decor-flower::before,
@@ -123,7 +119,7 @@ select {
   position: absolute;
   inset: 1.9rem;
   border-radius: 45% 55% 50% 50%;
-  border: 1px solid rgba(36, 31, 27, 0.16);
+  border: 1px solid rgba(143, 74, 47, 0.18);
   transform: rotate(28deg);
 }
 
@@ -143,7 +139,7 @@ select {
   top: 1rem;
   width: 4.4rem;
   height: 6rem;
-  border: 1px solid rgba(36, 31, 27, 0.18);
+  border: 1px solid rgba(67, 81, 58, 0.24);
   border-radius: 75% 35% 70% 45%;
 }
 
@@ -161,8 +157,8 @@ select {
   position: relative;
   overflow: hidden;
   background:
-    linear-gradient(135deg, rgba(155, 79, 53, 0.14), rgba(201, 135, 99, 0.16), rgba(216, 185, 140, 0.2)),
-    #EADCCC;
+    linear-gradient(135deg, rgba(67, 81, 58, 0.2), rgba(143, 74, 47, 0.14), rgba(197, 154, 98, 0.22)),
+    #D4B88F;
 }
 
 .image-placeholder::after {
@@ -170,7 +166,7 @@ select {
   position: absolute;
   left: 1rem;
   bottom: 0.85rem;
-  color: rgba(36, 31, 27, 0.44);
+  color: rgba(36, 25, 19, 0.5);
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -181,8 +177,8 @@ select {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at center, rgba(247, 241, 232, 0.1) 0%, rgba(247, 241, 232, 0.34) 46%, rgba(239, 226, 209, 0.92) 100%),
-    linear-gradient(180deg, rgba(255, 249, 241, 0.12), rgba(239, 226, 209, 0.4));
+    radial-gradient(circle at 50% 45%, rgba(232, 211, 182, 0.12) 0%, rgba(232, 211, 182, 0.36) 38%, rgba(232, 211, 182, 0.78) 72%),
+    linear-gradient(180deg, rgba(67, 81, 58, 0.12), rgba(143, 74, 47, 0.08) 52%, rgba(36, 25, 19, 0.12));
 }
 
 .hero-section {
@@ -193,6 +189,11 @@ select {
 .turnos-grid {
   display: grid;
   gap: 2.5rem;
+}
+
+.services-booking-grid {
+  display: grid;
+  gap: 1.5rem;
 }
 
 .footer-grid {
@@ -211,6 +212,149 @@ select {
   column-gap: 1.25rem;
 }
 
+.immersive-gallery {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(197, 154, 98, 0.28), transparent 22rem),
+    linear-gradient(135deg, #241913 0%, #43513A 52%, #8F4A2F 100%);
+}
+
+.immersive-gallery::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(232, 211, 182, 0.16), transparent 14rem),
+    radial-gradient(circle at 80% 80%, rgba(197, 154, 98, 0.12), transparent 18rem);
+}
+
+.gallery-perspective {
+  height: min(68vh, 42rem);
+  min-height: 30rem;
+  perspective: 980px;
+}
+
+.gallery-room {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(5deg) translateZ(-2rem);
+  animation: visitor-breath 8s ease-in-out infinite;
+}
+
+.gallery-wall,
+.gallery-floor,
+.gallery-ceiling {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(232, 211, 182, 0.18);
+  background:
+    linear-gradient(135deg, rgba(232, 211, 182, 0.16), rgba(36, 25, 19, 0.18)),
+    rgba(36, 25, 19, 0.82);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.25);
+}
+
+.gallery-wall-left,
+.gallery-wall-right {
+  width: 28rem;
+  height: 25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: 2rem;
+}
+
+.gallery-wall-left {
+  transform: translate(-150%, -50%) rotateY(68deg);
+}
+
+.gallery-wall-right {
+  transform: translate(50%, -50%) rotateY(-68deg);
+}
+
+.gallery-wall-back {
+  width: 34rem;
+  height: 25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transform: translate(-50%, -50%) translateZ(-18rem);
+}
+
+.gallery-floor {
+  width: 54rem;
+  height: 32rem;
+  transform: translate(-50%, 5%) rotateX(82deg);
+  transform-origin: center top;
+  background:
+    linear-gradient(90deg, rgba(232, 211, 182, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(232, 211, 182, 0.07) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(143, 74, 47, 0.18), rgba(36, 25, 19, 0.9));
+  background-size: 4rem 4rem, 4rem 4rem, auto;
+}
+
+.gallery-ceiling {
+  width: 46rem;
+  height: 18rem;
+  transform: translate(-50%, -135%) rotateX(-76deg);
+  opacity: 0.58;
+}
+
+.gallery-painting {
+  border: 0.6rem solid rgba(232, 211, 182, 0.82);
+  background: #241913;
+  color: #E8D3B6;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.34);
+}
+
+.gallery-painting.large {
+  width: 13rem;
+}
+
+.gallery-painting.medium {
+  width: 11rem;
+}
+
+.gallery-painting.small {
+  width: 9rem;
+}
+
+.gallery-art-surface {
+  height: 9rem;
+  background:
+    radial-gradient(circle at 30% 24%, rgba(197, 154, 98, 0.62), transparent 32%),
+    radial-gradient(circle at 70% 64%, rgba(67, 81, 58, 0.7), transparent 36%),
+    linear-gradient(135deg, rgba(143, 74, 47, 0.88), rgba(36, 25, 19, 0.92));
+}
+
+.gallery-painting h2 {
+  padding: 0.65rem 0.7rem 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.gallery-painting p {
+  padding: 0.3rem 0.7rem 0.75rem;
+  color: rgba(232, 211, 182, 0.72);
+  font-size: 0.68rem;
+}
+
+@keyframes visitor-breath {
+  0%,
+  100% {
+    transform: rotateX(5deg) translateZ(-2rem) translateY(0);
+  }
+
+  50% {
+    transform: rotateX(5deg) translateZ(-1rem) translateY(-0.35rem);
+  }
+}
+
 @media (min-width: 768px) {
   .masonry {
     column-count: 2;
@@ -218,6 +362,40 @@ select {
 
   .review-slide {
     flex-basis: 48%;
+  }
+}
+
+@media (max-width: 767px) {
+  .gallery-perspective {
+    height: 34rem;
+    perspective: 720px;
+  }
+
+  .gallery-wall-left,
+  .gallery-wall-right {
+    width: 18rem;
+    height: 22rem;
+    padding: 1rem;
+  }
+
+  .gallery-wall-back {
+    width: 18rem;
+    height: 22rem;
+    transform: translate(-50%, -50%) translateZ(-12rem);
+  }
+
+  .gallery-floor {
+    width: 31rem;
+  }
+
+  .gallery-painting.large,
+  .gallery-painting.medium,
+  .gallery-painting.small {
+    width: 8.5rem;
+  }
+
+  .gallery-art-surface {
+    height: 6rem;
   }
 }
 
@@ -229,6 +407,11 @@ select {
   .turnos-grid {
     grid-template-columns: 0.85fr 1.15fr;
     align-items: center;
+  }
+
+  .services-booking-grid {
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: start;
   }
 
   .footer-grid {

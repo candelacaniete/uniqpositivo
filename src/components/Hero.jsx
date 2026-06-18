@@ -3,7 +3,6 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Line } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
 import { AdditiveBlending } from 'three';
-import UniqLogo from './UniqLogo.jsx';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -28,10 +27,10 @@ function MagicDust({ count, animate }) {
     const nextPositions = new Float32Array(total * 3);
     const nextColors = new Float32Array(total * 3);
     const palette = [
-      [1, 0.42, 0],
-      [0.91, 0.12, 0.55],
-      [0.48, 0.18, 0.75],
-      [0.96, 0.94, 0.92],
+      [0.56, 0.29, 0.18],
+      [0.26, 0.32, 0.23],
+      [0.77, 0.6, 0.38],
+      [0.9, 0.78, 0.62],
     ];
 
     for (let index = 0; index < total; index += 1) {
@@ -71,10 +70,10 @@ function MagicDust({ count, animate }) {
           <bufferAttribute attach="attributes-color" args={[colors, 3]} />
         </bufferGeometry>
         <pointsMaterial
-          size={0.019}
+          size={0.014}
           vertexColors
           transparent
-          opacity={0.72}
+          opacity={0.38}
           depthWrite={false}
           blending={AdditiveBlending}
         />
@@ -142,7 +141,7 @@ function HairStrands({ animate }) {
   );
 }
 
-function OrganicButterfly({ position, scale = 1, color = '#7C6658', animate }) {
+function FlyingButterfly({ position, scale = 1, color = '#43513A', delay = 0, animate }) {
   const groupRef = useRef(null);
   const leftWingRef = useRef(null);
   const rightWingRef = useRef(null);
@@ -150,11 +149,15 @@ function OrganicButterfly({ position, scale = 1, color = '#7C6658', animate }) {
   useFrame(({ clock }) => {
     if (!animate) return;
 
-    const flap = Math.sin(clock.elapsedTime * 1.8 + position[0]) * 0.18;
+    const time = clock.elapsedTime + delay;
+    const flap = Math.sin(time * 2.2) * 0.24;
 
     if (groupRef.current) {
-      groupRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.55 + position[2]) * 0.08;
-      groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.35 + position[0]) * 0.12;
+      groupRef.current.position.x = position[0] + Math.sin(time * 0.34) * 0.18;
+      groupRef.current.position.y = position[1] + Math.sin(time * 0.52) * 0.14;
+      groupRef.current.position.z = position[2] + Math.cos(time * 0.28) * 0.2;
+      groupRef.current.rotation.z = Math.sin(time * 0.38) * 0.18;
+      groupRef.current.rotation.y = Math.sin(time * 0.22) * 0.3;
     }
 
     if (leftWingRef.current && rightWingRef.current) {
@@ -164,52 +167,92 @@ function OrganicButterfly({ position, scale = 1, color = '#7C6658', animate }) {
   });
 
   return (
-    <Float speed={1.1} rotationIntensity={0.16} floatIntensity={0.28}>
+    <Float speed={0.75} rotationIntensity={0.12} floatIntensity={0.24}>
       <group ref={groupRef} position={position} scale={scale}>
-        <mesh ref={leftWingRef} position={[-0.13, 0.04, 0]} rotation={[0, 0.38, -0.42]} scale={[0.75, 1.15, 1]}>
-          <circleGeometry args={[0.28, 32]} />
-          <meshBasicMaterial color={color} transparent opacity={0.28} depthWrite={false} side={2} />
+        <mesh ref={leftWingRef} position={[-0.16, 0.05, 0]} rotation={[0, 0.38, -0.38]} scale={[0.82, 1.22, 1]}>
+          <circleGeometry args={[0.28, 36]} />
+          <meshBasicMaterial color={color} transparent opacity={0.44} depthWrite={false} side={2} />
         </mesh>
-        <mesh ref={rightWingRef} position={[0.13, 0.04, 0]} rotation={[0, -0.38, 0.42]} scale={[0.75, 1.15, 1]}>
-          <circleGeometry args={[0.28, 32]} />
-          <meshBasicMaterial color={color} transparent opacity={0.28} depthWrite={false} side={2} />
+        <mesh ref={rightWingRef} position={[0.16, 0.05, 0]} rotation={[0, -0.38, 0.38]} scale={[0.82, 1.22, 1]}>
+          <circleGeometry args={[0.28, 36]} />
+          <meshBasicMaterial color={color} transparent opacity={0.44} depthWrite={false} side={2} />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.018, 0.018, 0.36, 10]} />
-          <meshBasicMaterial color="#7C6658" transparent opacity={0.42} depthWrite={false} />
+          <meshBasicMaterial color="#241913" transparent opacity={0.5} depthWrite={false} />
         </mesh>
+        <Line points={[[-0.02, 0.18, 0], [-0.2, 0.34, 0]]} color="#241913" lineWidth={0.35} transparent opacity={0.38} />
+        <Line points={[[0.02, 0.18, 0], [0.2, 0.34, 0]]} color="#241913" lineWidth={0.35} transparent opacity={0.38} />
       </group>
     </Float>
   );
 }
 
+function PlantLeaves({ animate }) {
+  const groupRef = useRef(null);
+  const leaves = useMemo(
+    () => [
+      { position: [-2.15, -1.18, -0.25], rotation: [0.15, 0.2, -0.72], scale: [0.22, 0.58, 1] },
+      { position: [-1.72, -0.98, -0.15], rotation: [0.18, 0.25, -0.32], scale: [0.18, 0.48, 1] },
+      { position: [-2.38, -0.62, -0.4], rotation: [0.12, 0.12, -1.06], scale: [0.16, 0.42, 1] },
+      { position: [2.12, -1.12, -0.2], rotation: [0.12, -0.2, 0.7], scale: [0.22, 0.58, 1] },
+      { position: [1.7, -0.9, -0.1], rotation: [0.16, -0.25, 0.34], scale: [0.18, 0.48, 1] },
+      { position: [2.38, -0.58, -0.38], rotation: [0.12, -0.12, 1.04], scale: [0.16, 0.42, 1] },
+      { position: [-1.82, 1.18, -0.55], rotation: [0.1, 0.18, -0.24], scale: [0.14, 0.36, 1] },
+      { position: [1.86, 1.16, -0.52], rotation: [0.1, -0.18, 0.24], scale: [0.14, 0.36, 1] },
+    ],
+    [],
+  );
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current || !animate) return;
+
+    groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.22) * 0.025;
+  });
+
+  return (
+    <group ref={groupRef}>
+      {leaves.map((leaf) => (
+        <mesh key={leaf.position.join('-')} position={leaf.position} rotation={leaf.rotation} scale={leaf.scale}>
+          <circleGeometry args={[0.42, 36]} />
+          <meshBasicMaterial color="#43513A" transparent opacity={0.42} depthWrite={false} side={2} />
+        </mesh>
+      ))}
+      <Line points={[[-2.28, -1.42, -0.3], [-1.54, -0.62, -0.16], [-1.74, 0.92, -0.5]]} color="#43513A" lineWidth={0.7} transparent opacity={0.38} />
+      <Line points={[[2.28, -1.42, -0.3], [1.54, -0.62, -0.16], [1.74, 0.92, -0.5]]} color="#43513A" lineWidth={0.7} transparent opacity={0.38} />
+    </group>
+  );
+}
+
 function HeroScene({ isMobile, animate }) {
-  const particleCount = isMobile ? 420 : 900;
+  const particleCount = isMobile ? 160 : 360;
   const butterflyScale = isMobile ? 0.72 : 1;
   const butterflies = isMobile
     ? [
-        { position: [-1.3, 0.62, -0.35], scale: 0.8, color: '#7C6658' },
-        { position: [1.25, -0.18, -0.15], scale: 0.72, color: '#C98763' },
-        { position: [0.82, 0.96, -0.6], scale: 0.52, color: '#D8B98C' },
+        { position: [-1.25, 0.66, -0.35], scale: 0.82, color: '#43513A', delay: 0.2 },
+        { position: [1.18, -0.2, -0.15], scale: 0.72, color: '#8F4A2F', delay: 1.1 },
+        { position: [0.78, 0.98, -0.6], scale: 0.54, color: '#C59A62', delay: 2 },
       ]
     : [
-        { position: [-2.15, 0.82, -0.55], scale: 0.88, color: '#7C6658' },
-        { position: [2.05, 0.48, -0.3], scale: 0.82, color: '#C98763' },
-        { position: [-1.45, -0.78, 0.05], scale: 0.64, color: '#9B4F35' },
-        { position: [1.48, -0.92, -0.2], scale: 0.72, color: '#7C6658' },
-        { position: [0.12, 1.22, -0.7], scale: 0.58, color: '#D8B98C' },
+        { position: [-2.18, 0.86, -0.55], scale: 0.88, color: '#43513A', delay: 0.2 },
+        { position: [2.08, 0.5, -0.3], scale: 0.82, color: '#8F4A2F', delay: 1.15 },
+        { position: [-1.48, -0.78, 0.05], scale: 0.64, color: '#C59A62', delay: 2.1 },
+        { position: [1.5, -0.9, -0.2], scale: 0.72, color: '#43513A', delay: 3 },
+        { position: [0.12, 1.22, -0.7], scale: 0.58, color: '#8F4A2F', delay: 3.8 },
       ];
 
   return (
     <>
+      <PlantLeaves animate={animate} />
       <HairStrands animate={animate} />
       <MagicDust count={particleCount} animate={animate} />
       {butterflies.map((butterfly) => (
-        <OrganicButterfly
+        <FlyingButterfly
           key={butterfly.position.join('-')}
           position={butterfly.position}
           scale={butterfly.scale * butterflyScale}
           color={butterfly.color}
+          delay={butterfly.delay}
           animate={animate}
         />
       ))}
@@ -244,14 +287,13 @@ export default function Hero({ onGalleryClick }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: 'easeOut' }}
       >
-        <UniqLogo className="brand-logo-hero mx-auto mb-8 w-full max-w-xs md:max-w-sm" />
-        <h1 className="font-serif text-4xl font-bold leading-tight text-cream md:text-7xl lg:text-8xl">
+        <h1 className="font-serif text-5xl font-semibold leading-none text-cream md:text-8xl lg:text-9xl">
           Sanamos tu cabello.
-          <span className="mt-2 block accent-text">Elevamos tu imagen.</span>
+          <span className="mt-3 block accent-text">Elevamos tu imagen.</span>
         </h1>
         <div className="mx-auto mt-9 flex w-full max-w-sm flex-col items-stretch justify-center gap-4 sm:max-w-none sm:flex-row sm:items-center">
           <a
-            href="#turnos"
+            href="#servicios"
             className="rounded-full bg-accent px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-white shadow-glow transition hover:-translate-y-0.5"
           >
             Reservar turno
@@ -268,11 +310,12 @@ export default function Hero({ onGalleryClick }) {
 
       <motion.a
         href="#servicios"
-        className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-widest text-cream/52"
+        className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-cream/52"
+        aria-label="Ir a servicios"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
       >
-        Scroll
+        <span className="h-2 w-2 rounded-full bg-cream/40" />
         <span className="h-10 w-px bg-accent" />
       </motion.a>
     </section>
