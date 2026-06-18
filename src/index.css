@@ -87,6 +87,16 @@ select {
   opacity: 1;
 }
 
+.brand-logo-glow {
+  filter: drop-shadow(0 0 18px rgba(233, 30, 140, 0.28));
+}
+
+.brand-logo-hero {
+  filter:
+    drop-shadow(0 0 28px rgba(245, 240, 235, 0.12))
+    drop-shadow(0 0 34px rgba(233, 30, 140, 0.18));
+}
+
 .section-shell {
   position: relative;
   overflow: hidden;

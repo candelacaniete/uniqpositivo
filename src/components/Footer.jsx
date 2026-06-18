@@ -1,3 +1,5 @@
+import UniqLogo from './UniqLogo.jsx';
+
 export default function Footer() {
   return (
     <footer id="contacto" className="bg-night px-5 py-10 text-sm text-ash md:px-8">
@@ -5,9 +7,7 @@ export default function Footer() {
       <div className="footer-grid mx-auto max-w-6xl">
         <div>
           <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-ink font-serif text-xl text-cream">
-              U
-            </span>
+            <UniqLogo compact className="h-12 w-12" />
             <span className="font-serif text-2xl font-bold text-cream">Uniq Positivo</span>
           </div>
           <p>Centro de belleza y galería de arte.</p>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import UniqLogo from './UniqLogo.jsx';
 
 const navLinks = [
   { label: 'Servicios', href: '#servicios' },
@@ -18,10 +19,8 @@ export default function Navbar() {
       <div className="h-px w-full bg-accent" />
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
         <a href="#hero" className="group flex items-center gap-3" aria-label="Ir al inicio">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-night font-serif text-xl text-cream shadow-glow">
-            U
-          </span>
-          <span className="font-serif text-xl font-bold tracking-wide text-cream">Uniq</span>
+          <UniqLogo compact className="brand-logo-glow h-11 w-11" />
+          <span className="font-serif text-xl font-bold tracking-wide text-cream">Uniq Positivo</span>
         </a>
 
         <div className="hidden items-center gap-7 md:flex">
