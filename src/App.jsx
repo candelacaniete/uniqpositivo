@@ -8,7 +8,8 @@ import Footer from './components/Footer.jsx';
 import GaleriaExperiencia from './components/GaleriaExperiencia.jsx';
 
 export default function App() {
-  const isGalleryPage = window.location.pathname === '/galeria';
+  const normalizedPath = window.location.pathname.replace(/\/$/, '') || '/';
+  const isGalleryPage = normalizedPath === '/galeria';
 
   const handleHeroGalleryClick = () => {
     document.getElementById('galeria-puente')?.scrollIntoView({ behavior: 'smooth', block: 'start' });

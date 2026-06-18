@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Line } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
-import { AdditiveBlending } from 'three';
+import { AdditiveBlending, DoubleSide, Shape } from 'three';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -141,7 +141,82 @@ function HairStrands({ animate }) {
   );
 }
 
-function FlyingButterfly({ position, scale = 1, color = '#43513A', delay = 0, animate }) {
+function ButterflyWing({ mirror = false, wingColor = '#43513A', accentColor = '#C59A62' }) {
+  const { forewing, hindwing } = useMemo(() => {
+    const nextForewing = new Shape();
+    nextForewing.moveTo(0.02, 0.08);
+    nextForewing.bezierCurveTo(0.18, 0.48, 0.56, 0.62, 0.86, 0.35);
+    nextForewing.bezierCurveTo(1.05, 0.16, 0.82, -0.12, 0.5, -0.16);
+    nextForewing.bezierCurveTo(0.26, -0.19, 0.08, -0.07, 0.02, 0.08);
+
+    const nextHindwing = new Shape();
+    nextHindwing.moveTo(0.02, -0.08);
+    nextHindwing.bezierCurveTo(0.16, -0.42, 0.48, -0.58, 0.7, -0.36);
+    nextHindwing.bezierCurveTo(0.86, -0.18, 0.68, 0.08, 0.38, 0.02);
+    nextHindwing.bezierCurveTo(0.18, -0.02, 0.06, -0.02, 0.02, -0.08);
+
+    return { forewing: nextForewing, hindwing: nextHindwing };
+  }, []);
+
+  const veins = [
+    [
+      [0.03, 0.06, 0.012],
+      [0.34, 0.25, 0.012],
+      [0.75, 0.3, 0.012],
+    ],
+    [
+      [0.05, 0.04, 0.012],
+      [0.32, 0.08, 0.012],
+      [0.68, 0.02, 0.012],
+    ],
+    [
+      [0.04, -0.08, 0.012],
+      [0.28, -0.22, 0.012],
+      [0.58, -0.28, 0.012],
+    ],
+  ];
+  const spots = [
+    [0.55, 0.22, 0.055],
+    [0.72, 0.08, 0.042],
+    [0.44, -0.28, 0.045],
+  ];
+
+  return (
+    <group scale={mirror ? [-1, 1, 1] : [1, 1, 1]}>
+      <mesh>
+        <shapeGeometry args={[forewing]} />
+        <meshBasicMaterial color={wingColor} transparent opacity={0.62} depthWrite={false} side={DoubleSide} />
+      </mesh>
+      <mesh>
+        <shapeGeometry args={[hindwing]} />
+        <meshBasicMaterial color={wingColor} transparent opacity={0.54} depthWrite={false} side={DoubleSide} />
+      </mesh>
+      {veins.map((points) => (
+        <Line key={points.flat().join('-')} points={points} color="#241913" lineWidth={0.32} transparent opacity={0.32} />
+      ))}
+      {spots.map(([x, y, radius]) => (
+        <mesh key={`${x}-${y}`} position={[x, y, 0.018]}>
+          <circleGeometry args={[radius, 18]} />
+          <meshBasicMaterial color={accentColor} transparent opacity={0.46} depthWrite={false} side={DoubleSide} />
+        </mesh>
+      ))}
+      <Line
+        points={[
+          [0.05, 0.08, 0.016],
+          [0.28, 0.42, 0.016],
+          [0.68, 0.4, 0.016],
+          [0.9, 0.18, 0.016],
+        ]}
+        color="#E8D3B6"
+        lineWidth={0.22}
+        transparent
+        opacity={0.38}
+      />
+    </group>
+  );
+}
+
+function FlyingButterfly({ position, scale = 1, color = '#43513A', accent = '#C59A62', delay = 0, animate }) {
   const groupRef = useRef(null);
   const leftWingRef = useRef(null);
   const rightWingRef = useRef(null);
@@ -169,20 +244,22 @@ function FlyingButterfly({ position, scale = 1, color = '#43513A', delay = 0, an
   return (
     <Float speed={0.75} rotationIntensity={0.12} floatIntensity={0.24}>
       <group ref={groupRef} position={position} scale={scale}>
-        <mesh ref={leftWingRef} position={[-0.16, 0.05, 0]} rotation={[0, 0.38, -0.38]} scale={[0.82, 1.22, 1]}>
-          <circleGeometry args={[0.28, 36]} />
-          <meshBasicMaterial color={color} transparent opacity={0.44} depthWrite={false} side={2} />
-        </mesh>
-        <mesh ref={rightWingRef} position={[0.16, 0.05, 0]} rotation={[0, -0.38, 0.38]} scale={[0.82, 1.22, 1]}>
-          <circleGeometry args={[0.28, 36]} />
-          <meshBasicMaterial color={color} transparent opacity={0.44} depthWrite={false} side={2} />
-        </mesh>
+        <group ref={leftWingRef} position={[-0.03, 0.03, 0]} rotation={[0, 0.38, -0.18]} scale={[0.76, 0.76, 1]}>
+          <ButterflyWing mirror wingColor={color} accentColor={accent} />
+        </group>
+        <group ref={rightWingRef} position={[0.03, 0.03, 0]} rotation={[0, -0.38, 0.18]} scale={[0.76, 0.76, 1]}>
+          <ButterflyWing wingColor={color} accentColor={accent} />
+        </group>
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.018, 0.018, 0.36, 10]} />
-          <meshBasicMaterial color="#241913" transparent opacity={0.5} depthWrite={false} />
+          <cylinderGeometry args={[0.026, 0.018, 0.48, 12]} />
+          <meshBasicMaterial color="#241913" transparent opacity={0.74} depthWrite={false} />
         </mesh>
-        <Line points={[[-0.02, 0.18, 0], [-0.2, 0.34, 0]]} color="#241913" lineWidth={0.35} transparent opacity={0.38} />
-        <Line points={[[0.02, 0.18, 0], [0.2, 0.34, 0]]} color="#241913" lineWidth={0.35} transparent opacity={0.38} />
+        <mesh position={[0, 0.26, 0]}>
+          <sphereGeometry args={[0.045, 14, 14]} />
+          <meshBasicMaterial color="#241913" transparent opacity={0.78} depthWrite={false} />
+        </mesh>
+        <Line points={[[-0.02, 0.27, 0], [-0.16, 0.45, 0.02], [-0.28, 0.48, 0.03]]} color="#241913" lineWidth={0.42} transparent opacity={0.5} />
+        <Line points={[[0.02, 0.27, 0], [0.16, 0.45, 0.02], [0.28, 0.48, 0.03]]} color="#241913" lineWidth={0.42} transparent opacity={0.5} />
       </group>
     </Float>
   );
@@ -229,16 +306,16 @@ function HeroScene({ isMobile, animate }) {
   const butterflyScale = isMobile ? 0.72 : 1;
   const butterflies = isMobile
     ? [
-        { position: [-1.25, 0.66, -0.35], scale: 0.82, color: '#43513A', delay: 0.2 },
-        { position: [1.18, -0.2, -0.15], scale: 0.72, color: '#8F4A2F', delay: 1.1 },
-        { position: [0.78, 0.98, -0.6], scale: 0.54, color: '#C59A62', delay: 2 },
+        { position: [-1.25, 0.66, -0.35], scale: 0.82, color: '#43513A', accent: '#C59A62', delay: 0.2 },
+        { position: [1.18, -0.2, -0.15], scale: 0.72, color: '#8F4A2F', accent: '#E8D3B6', delay: 1.1 },
+        { position: [0.78, 0.98, -0.6], scale: 0.54, color: '#C59A62', accent: '#43513A', delay: 2 },
       ]
     : [
-        { position: [-2.18, 0.86, -0.55], scale: 0.88, color: '#43513A', delay: 0.2 },
-        { position: [2.08, 0.5, -0.3], scale: 0.82, color: '#8F4A2F', delay: 1.15 },
-        { position: [-1.48, -0.78, 0.05], scale: 0.64, color: '#C59A62', delay: 2.1 },
-        { position: [1.5, -0.9, -0.2], scale: 0.72, color: '#43513A', delay: 3 },
-        { position: [0.12, 1.22, -0.7], scale: 0.58, color: '#8F4A2F', delay: 3.8 },
+        { position: [-2.18, 0.86, -0.55], scale: 0.88, color: '#43513A', accent: '#C59A62', delay: 0.2 },
+        { position: [2.08, 0.5, -0.3], scale: 0.82, color: '#8F4A2F', accent: '#E8D3B6', delay: 1.15 },
+        { position: [-1.48, -0.78, 0.05], scale: 0.64, color: '#C59A62', accent: '#43513A', delay: 2.1 },
+        { position: [1.5, -0.9, -0.2], scale: 0.72, color: '#43513A', accent: '#8F4A2F', delay: 3 },
+        { position: [0.12, 1.22, -0.7], scale: 0.58, color: '#8F4A2F', accent: '#C59A62', delay: 3.8 },
       ];
 
   return (
@@ -252,6 +329,7 @@ function HeroScene({ isMobile, animate }) {
           position={butterfly.position}
           scale={butterfly.scale * butterflyScale}
           color={butterfly.color}
+          accent={butterfly.accent}
           delay={butterfly.delay}
           animate={animate}
         />
