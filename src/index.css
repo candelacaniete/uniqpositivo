@@ -173,6 +173,11 @@ select {
   background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.2) 42%, rgba(10, 10, 10, 0.92) 100%);
 }
 
+.hero-section {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
 .turnos-grid {
   display: grid;
   gap: 2.5rem;
@@ -221,5 +226,19 @@ select {
 
   .review-slide {
     flex-basis: 33.333%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

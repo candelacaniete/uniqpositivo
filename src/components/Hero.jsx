@@ -1,12 +1,28 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
-function ButterflyParticles() {
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const handleChange = () => setIsMobile(mediaQuery.matches);
+
+    handleChange();
+    mediaQuery.addEventListener('change', handleChange);
+
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return isMobile;
+}
+
+function ButterflyParticles({ count, animate }) {
   const pointsRef = useRef(null);
   const { positions, colors } = useMemo(() => {
-    const total = 1150;
+    const total = count;
     const nextPositions = new Float32Array(total * 3);
     const nextColors = new Float32Array(total * 3);
     const palette = [
@@ -36,10 +52,10 @@ function ButterflyParticles() {
     }
 
     return { positions: nextPositions, colors: nextColors };
-  }, []);
+  }, [count]);
 
   useFrame(({ clock }) => {
-    if (!pointsRef.current) return;
+    if (!pointsRef.current || !animate) return;
 
     pointsRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.28) * 0.08;
     pointsRef.current.rotation.y = Math.sin(clock.elapsedTime * 0.18) * 0.16;
@@ -60,34 +76,41 @@ function ButterflyParticles() {
 }
 
 export default function Hero({ onGalleryClick }) {
+  const isMobile = useIsMobile();
+  const shouldReduceMotion = useReducedMotion();
+  const particleCount = isMobile ? 520 : 1250;
+  const animateParticles = !shouldReduceMotion;
+
   return (
-    <section id="hero" className="section-shell relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-5 pt-24">
+    <section id="hero" className="hero-section section-shell relative flex items-center justify-center overflow-hidden bg-ink px-5 pt-24">
       <div className="decor-butterfly -left-10 top-28 hidden md:block" />
       <div className="decor-flower -right-12 bottom-16" />
 
       <div className="absolute inset-0 opacity-80">
-        <Canvas camera={{ position: [0, 0, 5.2], fov: 48 }}>
-          <ButterflyParticles />
+        <Canvas
+          camera={{ position: [0, 0, isMobile ? 6.2 : 5.2], fov: isMobile ? 54 : 48 }}
+          dpr={isMobile ? [1, 1.35] : [1, 1.8]}
+        >
+          <ButterflyParticles count={particleCount} animate={animateParticles} />
         </Canvas>
       </div>
 
       <div className="hero-vignette" />
 
       <motion.div
-        className="relative z-10 mx-auto max-w-5xl text-center"
+        className="relative z-10 mx-auto max-w-4xl text-center"
         initial={{ opacity: 0, y: 26 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: 'easeOut' }}
       >
-        <p className="mb-5 text-xs uppercase tracking-widest text-cream/58">Belleza · Arte · Imagen</p>
         <h1 className="font-serif text-5xl font-bold leading-tight text-cream md:text-7xl lg:text-8xl">
-          Sanamos tu cabello y elevamos tu imagen
-          <span className="mt-4 block accent-text">toda esa magia sucede dentro de una galería de arte</span>
+          Sanamos tu cabello.
+          <span className="mt-2 block accent-text">Elevamos tu imagen.</span>
         </h1>
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div className="mx-auto mt-9 flex w-full max-w-sm flex-col items-stretch justify-center gap-4 sm:max-w-none sm:flex-row sm:items-center">
           <a
             href="#turnos"
-            className="rounded-full bg-accent px-8 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-glow transition hover:-translate-y-0.5"
+            className="rounded-full bg-accent px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-white shadow-glow transition hover:-translate-y-0.5"
           >
             Reservar turno
           </a>
