@@ -1,0 +1,225 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+:root {
+  color-scheme: dark;
+  --color-ink: #0A0A0A;
+  --color-night: #111111;
+  --color-cream: #F5F0EB;
+  --color-warm: #0D0B08;
+  --color-ash: #A9A19A;
+  --color-line: #27211F;
+  --accent-orange: #FF6B00;
+  --accent-magenta: #E91E8C;
+  --accent-violet: #7B2FBE;
+  --accent-gradient: linear-gradient(135deg, var(--accent-orange), var(--accent-magenta), var(--accent-violet));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(123, 47, 190, 0.14), transparent 24rem),
+    radial-gradient(circle at 78% 4%, rgba(255, 107, 0, 0.08), transparent 22rem),
+    var(--color-ink);
+  color: var(--color-cream);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  pointer-events: none;
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.14;
+  mix-blend-mode: soft-light;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+}
+
+button,
+a,
+input,
+select {
+  font: inherit;
+}
+
+.accent-text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.accent-border {
+  position: relative;
+}
+
+.accent-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.accent-border:hover::before,
+.accent-border:focus-within::before {
+  opacity: 1;
+}
+
+.section-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.decor-flower,
+.decor-butterfly {
+  pointer-events: none;
+  position: absolute;
+  opacity: 0.12;
+  filter: blur(0.2px);
+}
+
+.decor-flower {
+  width: 12rem;
+  height: 12rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 240, 235, 0.22);
+}
+
+.decor-flower::before,
+.decor-flower::after {
+  content: "";
+  position: absolute;
+  inset: 1.9rem;
+  border-radius: 45% 55% 50% 50%;
+  border: 1px solid rgba(245, 240, 235, 0.2);
+  transform: rotate(28deg);
+}
+
+.decor-flower::after {
+  transform: rotate(-42deg);
+}
+
+.decor-butterfly {
+  width: 10rem;
+  height: 8rem;
+}
+
+.decor-butterfly::before,
+.decor-butterfly::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  width: 4.4rem;
+  height: 6rem;
+  border: 1px solid rgba(245, 240, 235, 0.22);
+  border-radius: 75% 35% 70% 45%;
+}
+
+.decor-butterfly::before {
+  left: 0.8rem;
+  transform: rotate(-18deg);
+}
+
+.decor-butterfly::after {
+  right: 0.8rem;
+  transform: scaleX(-1) rotate(-18deg);
+}
+
+.image-placeholder {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(233, 30, 140, 0.14), rgba(123, 47, 190, 0.2)),
+    #15100E;
+}
+
+.image-placeholder::after {
+  content: "placeholder";
+  position: absolute;
+  left: 1rem;
+  bottom: 0.85rem;
+  color: rgba(245, 240, 235, 0.48);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hero-vignette {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.2) 42%, rgba(10, 10, 10, 0.92) 100%);
+}
+
+.turnos-grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.footer-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.review-slide {
+  min-width: 0;
+  flex: 0 0 88%;
+  padding-left: 1.25rem;
+}
+
+.masonry {
+  column-count: 1;
+  column-gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .masonry {
+    column-count: 2;
+  }
+
+  .review-slide {
+    flex-basis: 48%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry {
+    column-count: 3;
+  }
+
+  .turnos-grid {
+    grid-template-columns: 0.85fr 1.15fr;
+    align-items: center;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1.1fr 2fr;
+    align-items: start;
+  }
+
+  .review-slide {
+    flex-basis: 33.333%;
+  }
+}
