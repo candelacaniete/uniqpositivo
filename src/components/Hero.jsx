@@ -132,7 +132,7 @@ function HairStrands({ animate }) {
         <Line
           key={points[0].join('-')}
           points={points}
-          color={index % 2 === 0 ? '#F5F0EB' : '#E91E8C'}
+          color={index % 2 === 0 ? '#7C6658' : '#C98763'}
           lineWidth={index % 2 === 0 ? 0.8 : 0.55}
           transparent
           opacity={index % 2 === 0 ? 0.28 : 0.34}
@@ -142,7 +142,7 @@ function HairStrands({ animate }) {
   );
 }
 
-function OrganicButterfly({ position, scale = 1, color = '#F5F0EB', animate }) {
+function OrganicButterfly({ position, scale = 1, color = '#7C6658', animate }) {
   const groupRef = useRef(null);
   const leftWingRef = useRef(null);
   const rightWingRef = useRef(null);
@@ -176,7 +176,7 @@ function OrganicButterfly({ position, scale = 1, color = '#F5F0EB', animate }) {
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.018, 0.018, 0.36, 10]} />
-          <meshBasicMaterial color="#F5F0EB" transparent opacity={0.46} depthWrite={false} />
+          <meshBasicMaterial color="#7C6658" transparent opacity={0.42} depthWrite={false} />
         </mesh>
       </group>
     </Float>
@@ -188,16 +188,16 @@ function HeroScene({ isMobile, animate }) {
   const butterflyScale = isMobile ? 0.72 : 1;
   const butterflies = isMobile
     ? [
-        { position: [-1.3, 0.62, -0.35], scale: 0.8, color: '#F5F0EB' },
-        { position: [1.25, -0.18, -0.15], scale: 0.72, color: '#E91E8C' },
-        { position: [0.82, 0.96, -0.6], scale: 0.52, color: '#7B2FBE' },
+        { position: [-1.3, 0.62, -0.35], scale: 0.8, color: '#7C6658' },
+        { position: [1.25, -0.18, -0.15], scale: 0.72, color: '#C98763' },
+        { position: [0.82, 0.96, -0.6], scale: 0.52, color: '#D8B98C' },
       ]
     : [
-        { position: [-2.15, 0.82, -0.55], scale: 0.88, color: '#F5F0EB' },
-        { position: [2.05, 0.48, -0.3], scale: 0.82, color: '#E91E8C' },
-        { position: [-1.45, -0.78, 0.05], scale: 0.64, color: '#FF6B00' },
-        { position: [1.48, -0.92, -0.2], scale: 0.72, color: '#F5F0EB' },
-        { position: [0.12, 1.22, -0.7], scale: 0.58, color: '#7B2FBE' },
+        { position: [-2.15, 0.82, -0.55], scale: 0.88, color: '#7C6658' },
+        { position: [2.05, 0.48, -0.3], scale: 0.82, color: '#C98763' },
+        { position: [-1.45, -0.78, 0.05], scale: 0.64, color: '#9B4F35' },
+        { position: [1.48, -0.92, -0.2], scale: 0.72, color: '#7C6658' },
+        { position: [0.12, 1.22, -0.7], scale: 0.58, color: '#D8B98C' },
       ];
 
   return (

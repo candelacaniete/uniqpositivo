@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 const artworks = [
   { title: 'Umbral de luz', artist: 'Artista invitada', year: '2026', height: 'h-80' },
   { title: 'Botánica interior', artist: 'Artista invitado', year: '2025', height: 'h-96' },
-  { title: 'Ritual violeta', artist: 'Colectivo Uniq', year: '2026', height: 'h-72' },
+  { title: 'Ritual de luz', artist: 'Colectivo Uniq', year: '2026', height: 'h-72' },
   { title: 'Rondeau 3352', artist: 'Artista residente', year: '2024', height: 'h-96' },
   { title: 'Cuerpo de flor', artist: 'Artista invitada', year: '2025', height: 'h-80' },
   { title: 'Magia quieta', artist: 'Artista residente', year: '2026', height: 'h-72' },

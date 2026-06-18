@@ -2,16 +2,16 @@
 @config "../tailwind.config.js";
 
 :root {
-  color-scheme: dark;
-  --color-ink: #0A0A0A;
-  --color-night: #111111;
-  --color-cream: #F5F0EB;
-  --color-warm: #0D0B08;
-  --color-ash: #A9A19A;
-  --color-line: #27211F;
-  --accent-orange: #FF6B00;
-  --accent-magenta: #E91E8C;
-  --accent-violet: #7B2FBE;
+  color-scheme: light;
+  --color-ink: #F7F1E8;
+  --color-night: #FFF9F1;
+  --color-cream: #241F1B;
+  --color-warm: #EFE2D1;
+  --color-ash: #746A62;
+  --color-line: #E2D3C4;
+  --accent-orange: #9B4F35;
+  --accent-magenta: #C98763;
+  --accent-violet: #D8B98C;
   --accent-gradient: linear-gradient(135deg, var(--accent-orange), var(--accent-magenta), var(--accent-violet));
 }
 
@@ -27,8 +27,8 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    radial-gradient(circle at 18% 14%, rgba(123, 47, 190, 0.14), transparent 24rem),
-    radial-gradient(circle at 78% 4%, rgba(255, 107, 0, 0.08), transparent 22rem),
+    radial-gradient(circle at 12% 12%, rgba(216, 185, 140, 0.22), transparent 22rem),
+    radial-gradient(circle at 82% 8%, rgba(155, 79, 53, 0.11), transparent 20rem),
     var(--color-ink);
   color: var(--color-cream);
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
@@ -41,11 +41,11 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 60;
-  opacity: 0.14;
-  mix-blend-mode: soft-light;
+  opacity: 0.24;
+  mix-blend-mode: multiply;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(89, 68, 52, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(89, 68, 52, 0.03) 1px, transparent 1px);
   background-size: 3px 3px, 5px 5px;
 }
 
@@ -88,13 +88,13 @@ select {
 }
 
 .brand-logo-glow {
-  filter: drop-shadow(0 0 18px rgba(233, 30, 140, 0.28));
+  filter: drop-shadow(0 12px 20px rgba(68, 48, 35, 0.14));
 }
 
 .brand-logo-hero {
   filter:
-    drop-shadow(0 0 28px rgba(245, 240, 235, 0.12))
-    drop-shadow(0 0 34px rgba(233, 30, 140, 0.18));
+    drop-shadow(0 18px 34px rgba(68, 48, 35, 0.14))
+    drop-shadow(0 0 28px rgba(216, 185, 140, 0.22));
 }
 
 .section-shell {
@@ -114,7 +114,7 @@ select {
   width: 12rem;
   height: 12rem;
   border-radius: 999px;
-  border: 1px solid rgba(245, 240, 235, 0.22);
+  border: 1px solid rgba(36, 31, 27, 0.18);
 }
 
 .decor-flower::before,
@@ -123,7 +123,7 @@ select {
   position: absolute;
   inset: 1.9rem;
   border-radius: 45% 55% 50% 50%;
-  border: 1px solid rgba(245, 240, 235, 0.2);
+  border: 1px solid rgba(36, 31, 27, 0.16);
   transform: rotate(28deg);
 }
 
@@ -143,7 +143,7 @@ select {
   top: 1rem;
   width: 4.4rem;
   height: 6rem;
-  border: 1px solid rgba(245, 240, 235, 0.22);
+  border: 1px solid rgba(36, 31, 27, 0.18);
   border-radius: 75% 35% 70% 45%;
 }
 
@@ -161,8 +161,8 @@ select {
   position: relative;
   overflow: hidden;
   background:
-    linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(233, 30, 140, 0.14), rgba(123, 47, 190, 0.2)),
-    #15100E;
+    linear-gradient(135deg, rgba(155, 79, 53, 0.14), rgba(201, 135, 99, 0.16), rgba(216, 185, 140, 0.2)),
+    #EADCCC;
 }
 
 .image-placeholder::after {
@@ -170,7 +170,7 @@ select {
   position: absolute;
   left: 1rem;
   bottom: 0.85rem;
-  color: rgba(245, 240, 235, 0.48);
+  color: rgba(36, 31, 27, 0.44);
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -180,7 +180,9 @@ select {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.2) 42%, rgba(10, 10, 10, 0.92) 100%);
+  background:
+    radial-gradient(circle at center, rgba(247, 241, 232, 0.1) 0%, rgba(247, 241, 232, 0.34) 46%, rgba(239, 226, 209, 0.92) 100%),
+    linear-gradient(180deg, rgba(255, 249, 241, 0.12), rgba(239, 226, 209, 0.4));
 }
 
 .hero-section {
