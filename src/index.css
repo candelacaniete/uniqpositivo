@@ -232,7 +232,8 @@ select {
 .gallery-perspective {
   height: min(68vh, 42rem);
   min-height: 30rem;
-  perspective: 1050px;
+  perspective: 1120px;
+  perspective-origin: 50% 48%;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -244,7 +245,7 @@ select {
 
 .gallery-room {
   position: relative;
-  width: min(86vw, 58rem);
+  width: min(86vw, 40rem);
   height: 100%;
   margin: 0 auto;
   transform-style: preserve-3d;
@@ -258,6 +259,7 @@ select {
   left: 50%;
   top: 50%;
   backface-visibility: hidden;
+  transform-style: preserve-3d;
   border: 1px solid rgba(232, 211, 182, 0.18);
   background:
     linear-gradient(135deg, rgba(232, 211, 182, 0.16), rgba(36, 25, 19, 0.18)),
@@ -267,39 +269,30 @@ select {
 
 .gallery-wall-left,
 .gallery-wall-right {
-  width: 28rem;
+  width: 34rem;
   height: 26rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.4rem;
-  padding: 2rem;
   transform-origin: center center;
 }
 
 .gallery-wall-left {
-  transform: translate(-100%, -50%) rotateY(90deg) translateZ(17rem);
+  transform: translate(-50%, -50%) translateX(-20rem) rotateY(90deg);
 }
 
 .gallery-wall-right {
-  transform: translate(0, -50%) rotateY(-90deg) translateZ(17rem);
+  transform: translate(-50%, -50%) translateX(20rem) rotateY(-90deg);
 }
 
 .gallery-wall-back {
-  width: 34rem;
+  width: 40rem;
   height: 26rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
   transform: translate(-50%, -50%) translateZ(-17rem);
 }
 
 .gallery-floor {
-  width: 34rem;
+  width: 40rem;
   height: 34rem;
   top: calc(50% + 13rem);
-  transform: translate(-50%, -50%) rotateX(90deg) translateZ(0);
+  transform: translate(-50%, -50%) rotateX(90deg);
   transform-origin: center center;
   background:
     linear-gradient(90deg, rgba(232, 211, 182, 0.07) 1px, transparent 1px),
@@ -309,11 +302,20 @@ select {
 }
 
 .gallery-ceiling {
-  width: 34rem;
+  width: 40rem;
   height: 34rem;
   top: calc(50% - 13rem);
-  transform: translate(-50%, -50%) rotateX(-90deg) translateZ(0);
+  transform: translate(-50%, -50%) rotateX(-90deg);
   opacity: 0.58;
+}
+
+.gallery-corner-shadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.22), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.22)),
+    linear-gradient(180deg, rgba(255, 231, 184, 0.06), transparent 32%, rgba(0, 0, 0, 0.18));
 }
 
 .gallery-painting {
@@ -325,7 +327,7 @@ select {
   background: #241913;
   color: #E8D3B6;
   text-align: left;
-  transform: translateZ(0.06rem);
+  transform: translateZ(0.08rem);
   transition:
     filter 280ms ease,
     box-shadow 280ms ease,
@@ -386,6 +388,36 @@ select {
   width: 9rem;
 }
 
+.gallery-wall .gallery-painting {
+  position: absolute;
+}
+
+.gallery-wall-left .gallery-painting.upper {
+  left: 3rem;
+  top: 3rem;
+}
+
+.gallery-wall-left .gallery-painting.lower {
+  right: 4rem;
+  bottom: 3.2rem;
+}
+
+.gallery-wall-right .gallery-painting.upper {
+  right: 3rem;
+  top: 3rem;
+}
+
+.gallery-wall-right .gallery-painting.lower {
+  left: 4rem;
+  bottom: 3.2rem;
+}
+
+.gallery-wall-back .gallery-painting.center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateZ(0.08rem);
+}
+
 .gallery-art-surface {
   display: block;
   height: 9rem;
@@ -441,39 +473,38 @@ select {
   }
 
   .gallery-room {
-    width: 24rem;
+    width: 22rem;
   }
 
   .gallery-wall-left,
   .gallery-wall-right {
     width: 20rem;
     height: 21rem;
-    padding: 1rem;
   }
 
   .gallery-wall-left {
-    transform: translate(-100%, -50%) rotateY(90deg) translateZ(9rem);
+    transform: translate(-50%, -50%) translateX(-11rem) rotateY(90deg);
   }
 
   .gallery-wall-right {
-    transform: translate(0, -50%) rotateY(-90deg) translateZ(9rem);
+    transform: translate(-50%, -50%) translateX(11rem) rotateY(-90deg);
   }
 
   .gallery-wall-back {
-    width: 18rem;
+    width: 22rem;
     height: 21rem;
-    transform: translate(-50%, -50%) translateZ(-9rem);
+    transform: translate(-50%, -50%) translateZ(-10rem);
   }
 
   .gallery-floor {
-    width: 18rem;
-    height: 18rem;
+    width: 22rem;
+    height: 20rem;
     top: calc(50% + 10.5rem);
   }
 
   .gallery-ceiling {
-    width: 18rem;
-    height: 18rem;
+    width: 22rem;
+    height: 20rem;
     top: calc(50% - 10.5rem);
   }
 
@@ -485,6 +516,28 @@ select {
 
   .gallery-art-surface {
     height: 6rem;
+  }
+
+  .gallery-wall-left .gallery-painting.upper,
+  .gallery-wall-right .gallery-painting.upper {
+    top: 2rem;
+  }
+
+  .gallery-wall-left .gallery-painting.upper,
+  .gallery-wall-right .gallery-painting.lower {
+    left: 1.4rem;
+    right: auto;
+  }
+
+  .gallery-wall-right .gallery-painting.upper,
+  .gallery-wall-left .gallery-painting.lower {
+    right: 1.4rem;
+    left: auto;
+  }
+
+  .gallery-wall-left .gallery-painting.lower,
+  .gallery-wall-right .gallery-painting.lower {
+    bottom: 2rem;
   }
 }
 

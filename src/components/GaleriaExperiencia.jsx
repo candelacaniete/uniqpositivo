@@ -2,18 +2,18 @@ import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const artworks = [
-  { id: 'umbral', title: 'Umbral de luz', artist: 'Artista invitada', year: '2026', side: 'left', size: 'large' },
-  { id: 'botanica', title: 'Botánica interior', artist: 'Artista invitado', year: '2025', side: 'right', size: 'medium' },
-  { id: 'ritual', title: 'Ritual de luz', artist: 'Colectivo Uniq', year: '2026', side: 'left', size: 'small' },
-  { id: 'rondeau', title: 'Rondeau 3352', artist: 'Artista residente', year: '2024', side: 'right', size: 'large' },
-  { id: 'cuerpo', title: 'Cuerpo de flor', artist: 'Artista invitada', year: '2025', side: 'back', size: 'medium' },
+  { id: 'umbral', title: 'Umbral de luz', artist: 'Artista invitada', year: '2026', side: 'left', size: 'large', slot: 'upper' },
+  { id: 'botanica', title: 'Botánica interior', artist: 'Artista invitado', year: '2025', side: 'right', size: 'medium', slot: 'upper' },
+  { id: 'ritual', title: 'Ritual de luz', artist: 'Colectivo Uniq', year: '2026', side: 'left', size: 'small', slot: 'lower' },
+  { id: 'rondeau', title: 'Rondeau 3352', artist: 'Artista residente', year: '2024', side: 'right', size: 'large', slot: 'lower' },
+  { id: 'cuerpo', title: 'Cuerpo de flor', artist: 'Artista invitada', year: '2025', side: 'back', size: 'medium', slot: 'center' },
 ];
 
 function ArtworkButton({ artwork, isSelected, onSelect }) {
   return (
     <button
       type="button"
-      className={`gallery-painting ${artwork.size} ${isSelected ? 'selected' : ''}`}
+      className={`gallery-painting ${artwork.size} ${artwork.slot} ${isSelected ? 'selected' : ''}`}
       aria-pressed={isSelected}
       onClick={(event) => {
         event.stopPropagation();
@@ -38,11 +38,11 @@ export default function GaleriaExperiencia() {
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
   const roomTransform = useMemo(() => {
-    const focusYaw = selectedArtwork?.side === 'left' ? 13 : selectedArtwork?.side === 'right' ? -13 : 0;
-    const focusLift = selectedArtwork ? -0.55 : 0;
-    const focusZoom = selectedArtwork ? 3.8 : -1.4;
+    const focusYaw = selectedArtwork?.side === 'left' ? -34 : selectedArtwork?.side === 'right' ? 34 : 0;
+    const focusLift = selectedArtwork?.slot === 'upper' ? 0.4 : selectedArtwork?.slot === 'lower' ? -0.8 : -0.25;
+    const focusZoom = selectedArtwork ? 7.2 : -2.2;
     const rotateX = 4 - look.y * 4.5;
-    const rotateY = look.x * -10 + focusYaw;
+    const rotateY = look.x * -8 + focusYaw;
 
     return `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${focusZoom}rem) translateY(${focusLift}rem)`;
   }, [look, selectedArtwork]);
@@ -94,6 +94,7 @@ export default function GaleriaExperiencia() {
         >
           <div className={`gallery-room ${selectedArtwork ? 'is-focused' : ''}`} style={{ transform: roomTransform }}>
             <div className="gallery-wall gallery-wall-left">
+              <span className="gallery-corner-shadow" />
               {artworks
                 .filter((artwork) => artwork.side === 'left')
                 .map((artwork) => (
@@ -107,6 +108,7 @@ export default function GaleriaExperiencia() {
             </div>
 
             <div className="gallery-wall gallery-wall-back">
+              <span className="gallery-corner-shadow" />
               {artworks
                 .filter((artwork) => artwork.side === 'back')
                 .map((artwork) => (
@@ -120,6 +122,7 @@ export default function GaleriaExperiencia() {
             </div>
 
             <div className="gallery-wall gallery-wall-right">
+              <span className="gallery-corner-shadow" />
               {artworks
                 .filter((artwork) => artwork.side === 'right')
                 .map((artwork) => (
