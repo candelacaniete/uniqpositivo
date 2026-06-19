@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 
-const heroImageUrl =
-  'https://images.unsplash.com/photo-1564141696939-9eb6e957ccfc?auto=format&fit=crop&w=1400&q=85';
+const heroImageUrl = '/hero/herouniq.png';
 
 export default function Hero({ onGalleryClick }) {
   return (
