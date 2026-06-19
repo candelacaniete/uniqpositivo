@@ -23,7 +23,7 @@ const artworks = [
     size: null,
     technique: null,
     theme: 'Silencio azul',
-    image: '/artworks/la-chica-de-azul.jpg',
+    image: '/artworks/la-chica-de-azul.png',
     palette: ['#446B7B', '#C79237', '#E5C27C'],
     context:
       'Un retrato sereno donde el azul funciona como atmósfera. La obra invita a mirar la pausa, el perfil y la elegancia de un gesto contenido.',
