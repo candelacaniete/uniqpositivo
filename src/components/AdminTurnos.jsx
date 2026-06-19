@@ -29,14 +29,15 @@ function depositLabel(status) {
 }
 
 export default function AdminTurnos() {
-  const [pin, setPin] = useState('');
-  const [authorized, setAuthorized] = useState(false);
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [authorized, setAuthorized] = useState(() => window.sessionStorage.getItem('uniq_admin_session') === 'active');
   const [date, setDate] = useState(getToday());
   const [reservations, setReservations] = useState([]);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const storageMode = getReservationStorageMode();
-  const configuredPin = import.meta.env.VITE_ADMIN_PIN || 'uniq-admin';
+  const configuredUser = import.meta.env.VITE_ADMIN_USER || 'admin';
+  const configuredPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin';
 
   const loadReservations = async () => {
     setIsLoading(true);
@@ -60,13 +61,21 @@ export default function AdminTurnos() {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    if (pin === configuredPin) {
+    if (credentials.username === configuredUser && credentials.password === configuredPassword) {
       setAuthorized(true);
+      window.sessionStorage.setItem('uniq_admin_session', 'active');
       setMessage('');
       return;
     }
 
-    setMessage('PIN incorrecto.');
+    setMessage('Usuario o contraseña incorrectos.');
+  };
+
+  const handleLogout = () => {
+    window.sessionStorage.removeItem('uniq_admin_session');
+    setAuthorized(false);
+    setCredentials({ username: '', password: '' });
+    setReservations([]);
   };
 
   const handleUpdate = async (reservation, patch) => {
@@ -89,15 +98,30 @@ export default function AdminTurnos() {
       <main className="min-h-screen bg-ink px-5 py-24 text-cream md:px-8">
         <form className="mx-auto max-w-md rounded-3xl border border-line bg-night p-6 shadow-soft-card" onSubmit={handleLogin}>
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Admin turnos</p>
-          <h1 className="font-serif text-5xl font-semibold leading-none">Ingresar</h1>
+          <h1 className="font-serif text-5xl font-semibold leading-none">Acceso interno</h1>
+          <p className="mt-4 text-sm leading-6 text-ash">
+            Ingresá con usuario y contraseña para ver reservas, confirmar turnos y controlar señas.
+          </p>
           <label className="mt-8 block">
-            <span className="mb-3 block text-sm font-semibold">PIN</span>
+            <span className="mb-3 block text-sm font-semibold">Usuario</span>
+            <input
+              type="text"
+              autoComplete="username"
+              className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+              value={credentials.username}
+              onChange={(event) => setCredentials((current) => ({ ...current, username: event.target.value }))}
+              placeholder={import.meta.env.VITE_ADMIN_USER ? 'Usuario privado' : 'Demo: admin'}
+            />
+          </label>
+          <label className="mt-5 block">
+            <span className="mb-3 block text-sm font-semibold">Contraseña</span>
             <input
               type="password"
+              autoComplete="current-password"
               className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
-              value={pin}
-              onChange={(event) => setPin(event.target.value)}
-              placeholder={import.meta.env.VITE_ADMIN_PIN ? 'PIN privado' : 'Demo: uniq-admin'}
+              value={credentials.password}
+              onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
+              placeholder={import.meta.env.VITE_ADMIN_PASSWORD ? 'Contraseña privada' : 'Demo: uniq-admin'}
             />
           </label>
           <button className="mt-6 w-full rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-widest text-night">
@@ -129,6 +153,9 @@ export default function AdminTurnos() {
             />
             <button className="rounded-full border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest" onClick={loadReservations}>
               Actualizar
+            </button>
+            <button className="rounded-full border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest" onClick={handleLogout}>
+              Salir
             </button>
           </div>
         </div>
