@@ -1,42 +1,37 @@
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, Droplets, Scissors, Sparkles, Waves } from 'lucide-react';
+import { Heart, Sparkles, Star, WandSparkles } from 'lucide-react';
 
 const services = [
   {
-    name: 'Corte',
-    description: 'Diseño de corte personalizado según rostro, textura y forma de uso cotidiana. Incluye diagnóstico y finalización.',
-    price: '$18.000',
-    duration: '60 min',
-    Icon: Scissors,
+    name: 'Combo Renovación',
+    description: 'Color en raíces + nutrición post color de colágeno y vitaminas.',
+    price: '$77.000',
+    deposit: '$10.000',
+    duration: '120 min aprox.',
+    Icon: WandSparkles,
   },
   {
-    name: 'Coloración',
-    description: 'Trabajo de color con evaluación previa de la fibra, objetivo visual y cuidado del cabello durante todo el proceso.',
-    price: 'Desde $38.000',
-    duration: '150 min',
+    name: 'Combo Brillo',
+    description: "Corte de cabello + lavado L'Oreal Professionel + nutrición de colágeno y karité.",
+    price: '$47.000',
+    duration: '90 min aprox.',
     Icon: Sparkles,
   },
   {
-    name: 'Tratamientos capilares',
-    description: 'Rituales de reparación, nutrición y brillo pensados para recuperar suavidad, movimiento y salud capilar.',
-    price: 'Desde $28.000',
-    duration: '75 min',
-    Icon: Droplets,
+    name: 'Combo Estrella',
+    description: 'Corte + lavado + tratamiento personalizado para nutrición, hidratación y restauración capilar.',
+    price: '$97.000',
+    duration: '120 min aprox.',
+    Icon: Star,
   },
   {
-    name: 'Peinados',
-    description: 'Peinados para eventos, producciones o momentos especiales con una búsqueda elegante y natural.',
-    price: 'Desde $24.000',
-    duration: '70 min',
-    Icon: Crown,
-  },
-  {
-    name: 'Extensiones',
-    description: 'Evaluación para sumar largo o volumen con integración natural, mantenimiento correcto y cuidado de la fibra.',
-    price: 'Consultar',
-    duration: 'Diagnóstico 45 min',
-    Icon: Waves,
+    name: 'Combo Amor Propio',
+    description:
+      'Color raíz hasta 3 cm de crecimiento + corte + tratamiento personalizado de nutrición, hidratación y reparación.',
+    price: '$159.000',
+    duration: '180 min aprox.',
+    Icon: Heart,
   },
 ];
 
@@ -62,7 +57,8 @@ export default function Servicios() {
 
   const isComplete = Boolean(selectedService && date && time);
   const whatsappHref = useMemo(() => {
-    const text = `Hola! Quiero reservar un turno para ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}. Duración aproximada: ${selectedService.duration}.`;
+    const depositText = selectedService.deposit ? ` Seña: ${selectedService.deposit}.` : '';
+    const text = `Hola! Quiero reservar un turno para ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText} Duración aproximada: ${selectedService.duration}.`;
     return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
   }, [date, selectedService, time]);
 
@@ -80,9 +76,9 @@ export default function Servicios() {
           transition={{ duration: 0.6 }}
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Servicios</p>
-          <h2 className="font-serif text-5xl font-semibold leading-none text-cream md:text-7xl">Elegí tu ritual y reservá</h2>
+          <h2 className="font-serif text-5xl font-semibold leading-none text-cream md:text-7xl">Elegí tu combo y reservá</h2>
           <p className="mt-6 max-w-2xl leading-8 text-ash">
-            Cada servicio abre su propia ficha de turno con descripción, valor, duración estimada y confirmación directa por WhatsApp.
+            Cada combo abre su propia ficha de turno con descripción, valor, duración estimada y confirmación directa por WhatsApp.
           </p>
         </motion.div>
 
@@ -113,6 +109,12 @@ export default function Servicios() {
                     <p className="mt-2 line-clamp-2 text-sm leading-6 text-ash">{description}</p>
                     <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-widest text-cream">
                       <span>{price}</span>
+                      {services[index].deposit ? (
+                        <>
+                          <span className="text-ash">·</span>
+                          <span>Seña {services[index].deposit}</span>
+                        </>
+                      ) : null}
                       <span className="text-ash">·</span>
                       <span>{services[index].duration}</span>
                     </div>
@@ -151,6 +153,12 @@ export default function Servicios() {
                 <p className="text-xs uppercase tracking-widest text-ash">Duración aprox.</p>
                 <p className="mt-2 font-serif text-2xl font-semibold text-cream">{selectedService.duration}</p>
               </div>
+              {selectedService.deposit ? (
+                <div className="rounded-3xl border border-line bg-ink/70 p-4 sm:col-span-2">
+                  <p className="text-xs uppercase tracking-widest text-ash">Seña</p>
+                  <p className="mt-2 font-serif text-2xl font-semibold text-cream">{selectedService.deposit}</p>
+                </div>
+              ) : null}
             </div>
 
             <label className="mt-6 block">
