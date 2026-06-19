@@ -39,11 +39,6 @@ export default function Galeria() {
             La entrada a la galería funciona como un cambio de escena: de la landing a una sala inmersiva, vista desde el ángulo de
             una persona visitante.
           </p>
-          <div className="mt-8 grid grid-cols-3 gap-3" aria-hidden="true">
-            <div className="image-placeholder h-28" />
-            <div className="image-placeholder h-36" />
-            <div className="image-placeholder h-28" />
-          </div>
         </motion.div>
       </div>
     </section>

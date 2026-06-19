@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 
+const heroImageUrl =
+  'https://images.unsplash.com/photo-1564141696939-9eb6e957ccfc?auto=format&fit=crop&w=1400&q=85';
+
 export default function Hero({ onGalleryClick }) {
   return (
     <section id="hero" className="editorial-hero bg-ink">
@@ -10,8 +13,7 @@ export default function Hero({ onGalleryClick }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          {/* TODO: reemplazar por fotografía editorial real de modelo/cabello */}
-          <div className="editorial-model-photo" />
+          <img className="editorial-model-photo" src={heroImageUrl} alt="Retrato editorial de mujer con cabello largo" />
         </motion.div>
 
         <motion.div
