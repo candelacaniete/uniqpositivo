@@ -10,7 +10,7 @@ const artworks = [
     size: '70 x 60',
     technique: 'Óleo sobre tela',
     theme: 'Retrato y oficio',
-    image: '/artworks/la-pintora.jpg',
+    image: '/artworks/la-pintora.png',
     palette: ['#C94B36', '#F2C414', '#1D5F9E'],
     context:
       'Una figura sostiene el gesto de pintar como una escena íntima: color, mirada y naturaleza se cruzan para hablar del oficio creativo como forma de identidad.',
@@ -36,7 +36,7 @@ const artworks = [
     size: '45 x 60',
     technique: 'Óleo sobre tela',
     theme: 'Contraste y presencia',
-    image: '/artworks/titulo-en-contraste.jpg',
+    image: '/artworks/titulo-en-contraste.png',
     palette: ['#213F3A', '#E77E20', '#E7C9C1'],
     context:
       'Una pieza de perfil fuerte, con planos de color y una composición de alto contraste que une figura, materia y gesto contemporáneo.',
