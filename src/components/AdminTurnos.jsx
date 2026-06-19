@@ -40,8 +40,9 @@ export default function AdminTurnos() {
   const [settingsDraft, setSettingsDraft] = useState({
     depositAlias: defaultBusinessSettings.depositAlias,
     workingDays: defaultBusinessSettings.workingDays,
-    timeSlotsText: defaultBusinessSettings.timeSlots.join(', '),
+    timeSlots: defaultBusinessSettings.timeSlots,
   });
+  const [newTimeSlot, setNewTimeSlot] = useState('');
   const [settingsMessage, setSettingsMessage] = useState('');
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const storageMode = getReservationStorageMode();
@@ -67,7 +68,7 @@ export default function AdminTurnos() {
     setSettingsDraft({
       depositAlias: nextSettings.depositAlias,
       workingDays: nextSettings.workingDays,
-      timeSlotsText: nextSettings.timeSlots.join(', '),
+      timeSlots: nextSettings.timeSlots,
     });
   };
 
@@ -117,7 +118,7 @@ export default function AdminTurnos() {
       const nextSettings = await updateBusinessSettings({
         depositAlias: settingsDraft.depositAlias,
         workingDays: settingsDraft.workingDays,
-        timeSlots: settingsDraft.timeSlotsText.split(','),
+        timeSlots: settingsDraft.timeSlots,
       });
       setSettings(nextSettings);
       setSettingsMessage('Configuración guardada.');
@@ -126,6 +127,32 @@ export default function AdminTurnos() {
     } finally {
       setIsSavingSettings(false);
     }
+  };
+
+  const toggleWorkingDay = (dayValue) => {
+    setSettingsDraft((current) => ({
+      ...current,
+      workingDays: current.workingDays.includes(dayValue)
+        ? current.workingDays.filter((value) => value !== dayValue)
+        : [...current.workingDays, dayValue],
+    }));
+  };
+
+  const addTimeSlot = () => {
+    if (!newTimeSlot || settingsDraft.timeSlots.includes(newTimeSlot)) return;
+
+    setSettingsDraft((current) => ({
+      ...current,
+      timeSlots: [...current.timeSlots, newTimeSlot].sort(),
+    }));
+    setNewTimeSlot('');
+  };
+
+  const removeTimeSlot = (slot) => {
+    setSettingsDraft((current) => ({
+      ...current,
+      timeSlots: current.timeSlots.filter((timeSlot) => timeSlot !== slot),
+    }));
   };
 
   const reservationsByTime = settings.timeSlots.map((time) => ({
@@ -137,7 +164,7 @@ export default function AdminTurnos() {
   if (!authorized) {
     return (
       <main className="min-h-screen bg-ink px-5 py-24 text-cream md:px-8">
-        <form className="mx-auto max-w-md rounded-3xl border border-line bg-night p-6 shadow-soft-card" onSubmit={handleLogin}>
+        <form className="mx-auto max-w-md border border-line bg-night p-6 shadow-soft-card md:p-8" onSubmit={handleLogin}>
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Admin turnos</p>
           <h1 className="font-serif text-5xl font-semibold leading-none">Acceso interno</h1>
           <p className="mt-4 text-sm leading-6 text-ash">
@@ -148,7 +175,7 @@ export default function AdminTurnos() {
             <input
               type="text"
               autoComplete="username"
-              className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+              className="w-full border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
               value={credentials.username}
               onChange={(event) => setCredentials((current) => ({ ...current, username: event.target.value }))}
               placeholder={import.meta.env.VITE_ADMIN_USER ? 'Usuario privado' : 'Demo: admin'}
@@ -159,13 +186,13 @@ export default function AdminTurnos() {
             <input
               type="password"
               autoComplete="current-password"
-              className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+              className="w-full border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
               value={credentials.password}
               onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
               placeholder={import.meta.env.VITE_ADMIN_PASSWORD ? 'Contraseña privada' : 'Demo: uniq-admin'}
             />
           </label>
-          <button className="mt-6 w-full rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-widest text-night">
+          <button className="mt-6 w-full border border-accent bg-transparent px-6 py-4 text-sm font-bold uppercase tracking-widest text-cream transition hover:border-cream hover:text-accent">
             Entrar
           </button>
           {message ? <p className="mt-4 text-sm text-ash">{message}</p> : null}
@@ -175,9 +202,9 @@ export default function AdminTurnos() {
   }
 
   return (
-    <main className="min-h-screen bg-ink px-5 py-10 text-cream md:px-8">
+    <main className="min-h-screen bg-ink px-4 py-8 text-cream md:px-8 md:py-10">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div className="border-b border-line pb-8">
           <div>
             <p className="mb-3 text-sm uppercase tracking-widest text-ash">Panel interno</p>
             <h1 className="font-serif text-5xl font-semibold leading-none md:text-7xl">Turnos y señas</h1>
@@ -185,10 +212,10 @@ export default function AdminTurnos() {
               Modo: {storageMode === 'supabase' ? 'Supabase compartido' : 'demo local del navegador'}
             </p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="flex rounded-full border border-line bg-night p-1">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
+            <div className="flex border border-line bg-night p-1">
               <button
-                className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest ${
+                className={`flex-1 px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
                   viewMode === 'day' ? 'bg-moss text-night' : 'text-cream'
                 }`}
                 onClick={() => setViewMode('day')}
@@ -196,7 +223,7 @@ export default function AdminTurnos() {
                 Día
               </button>
               <button
-                className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest ${
+                className={`flex-1 px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
                   viewMode === 'all' ? 'bg-moss text-night' : 'text-cream'
                 }`}
                 onClick={() => setViewMode('all')}
@@ -206,23 +233,23 @@ export default function AdminTurnos() {
             </div>
             <input
               type="date"
-              className="rounded-2xl border border-line bg-night px-4 py-3 outline-none focus:border-moss"
+              className="border border-line bg-night px-4 py-3 outline-none focus:border-moss"
               value={date}
               onChange={(event) => setDate(event.target.value)}
               disabled={viewMode === 'all'}
             />
-            <button className="rounded-full border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest" onClick={loadReservations}>
+            <button className="border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest transition hover:border-moss hover:text-moss" onClick={loadReservations}>
               Actualizar
             </button>
-            <button className="rounded-full border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest" onClick={handleLogout}>
+            <button className="border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest transition hover:border-terracotta hover:text-terracotta" onClick={handleLogout}>
               Salir
             </button>
           </div>
         </div>
 
-        {message ? <p className="mt-6 rounded-2xl border border-line bg-night p-4 text-sm text-ash">{message}</p> : null}
+        {message ? <p className="mt-6 border border-line bg-night p-4 text-sm text-ash">{message}</p> : null}
 
-        <section className="mt-10 rounded-3xl border border-line bg-night/90 p-5 shadow-soft-card">
+        <section className="mt-10 border border-line bg-night/90 p-5 shadow-soft-card md:p-7">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-ash">Configuración</p>
             <h2 className="mt-1 font-serif text-4xl font-semibold">Agenda y señas</h2>
@@ -232,7 +259,7 @@ export default function AdminTurnos() {
             <label className="block">
               <span className="mb-3 block text-sm font-semibold text-cream">Alias para señas</span>
               <input
-                className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+                className="w-full border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
                 value={settingsDraft.depositAlias}
                 onChange={(event) => setSettingsDraft((current) => ({ ...current, depositAlias: event.target.value }))}
                 placeholder="alias.mp"
@@ -241,44 +268,62 @@ export default function AdminTurnos() {
 
             <fieldset>
               <legend className="mb-3 text-sm font-semibold text-cream">Días laborales</legend>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
                 {dayOptions.map((day) => {
                   const checked = settingsDraft.workingDays.includes(day.value);
 
                   return (
-                    <label key={day.value} className="flex items-center gap-2 rounded-2xl border border-line bg-ink/70 px-3 py-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(event) => {
-                          setSettingsDraft((current) => ({
-                            ...current,
-                            workingDays: event.target.checked
-                              ? [...current.workingDays, day.value]
-                              : current.workingDays.filter((value) => value !== day.value),
-                          }));
-                        }}
-                      />
+                    <button
+                      key={day.value}
+                      type="button"
+                      className={`border px-3 py-3 text-left text-xs font-bold uppercase tracking-widest transition ${
+                        checked ? 'border-moss bg-moss text-night' : 'border-line bg-ink/70 text-cream hover:border-moss hover:text-moss'
+                      }`}
+                      aria-pressed={checked}
+                      onClick={() => toggleWorkingDay(day.value)}
+                    >
                       {day.label}
-                    </label>
+                    </button>
                   );
                 })}
               </div>
             </fieldset>
 
-            <label className="block">
+            <div>
               <span className="mb-3 block text-sm font-semibold text-cream">Horarios</span>
-              <textarea
-                className="min-h-32 w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
-                value={settingsDraft.timeSlotsText}
-                onChange={(event) => setSettingsDraft((current) => ({ ...current, timeSlotsText: event.target.value }))}
-                placeholder="10:00, 11:30, 13:00"
-              />
-              <span className="mt-2 block text-xs text-ash">Separá cada horario con coma.</span>
-            </label>
+              <div className="flex gap-2">
+                <input
+                  type="time"
+                  className="min-w-0 flex-1 border border-line bg-ink/80 px-4 py-3 outline-none transition focus:border-moss"
+                  value={newTimeSlot}
+                  onChange={(event) => setNewTimeSlot(event.target.value)}
+                />
+                <button
+                  type="button"
+                  className="border border-line px-4 py-3 text-xs font-bold uppercase tracking-widest transition hover:border-moss hover:text-moss"
+                  onClick={addTimeSlot}
+                >
+                  Agregar
+                </button>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {settingsDraft.timeSlots.map((slot) => (
+                  <button
+                    key={slot}
+                    type="button"
+                    className="border border-line bg-ink/70 px-4 py-2 text-xs font-bold uppercase tracking-widest text-cream transition hover:border-terracotta hover:text-terracotta"
+                    onClick={() => removeTimeSlot(slot)}
+                    aria-label={`Quitar horario ${slot}`}
+                  >
+                    {slot} ×
+                  </button>
+                ))}
+              </div>
+              <span className="mt-2 block text-xs text-ash">Tocá un horario para quitarlo.</span>
+            </div>
 
             <div className="lg:col-span-3">
-              <button className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-widest text-night" disabled={isSavingSettings}>
+              <button className="border border-accent bg-transparent px-6 py-3 text-sm font-bold uppercase tracking-widest text-cream transition hover:border-cream hover:text-accent" disabled={isSavingSettings}>
                 {isSavingSettings ? 'Guardando...' : 'Guardar configuración'}
               </button>
               {settingsMessage ? <p className="mt-3 text-sm text-ash">{settingsMessage}</p> : null}
@@ -286,7 +331,7 @@ export default function AdminTurnos() {
           </form>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-line bg-night/90 p-5 shadow-soft-card">
+        <section className="mt-10 border border-line bg-night/90 p-4 shadow-soft-card md:p-5">
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-ash">Reservas</p>
@@ -314,7 +359,7 @@ export default function AdminTurnos() {
                 {sortedReservations.length > 0 ? (
                   sortedReservations.map((reservation) => (
                     <tr key={reservation.id} className="bg-ink/70">
-                      <td className="rounded-l-2xl px-4 py-4">
+                      <td className="px-4 py-4 md:rounded-l-2xl">
                         <p className="font-semibold text-cream">{reservation.serviceName}</p>
                         <p className="mt-1 text-xs text-ash">
                           {reservation.servicePrice}
@@ -340,16 +385,16 @@ export default function AdminTurnos() {
                           {depositLabel(reservation.depositStatus)}
                         </span>
                       </td>
-                      <td className="rounded-r-2xl px-4 py-4">
+                      <td className="px-4 py-4 md:rounded-r-2xl">
                         <div className="flex flex-wrap gap-2">
                           <button
-                            className="rounded-full border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
+                            className="border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
                             onClick={() => handleUpdate(reservation, { depositStatus: 'paid', status: 'confirmed' })}
                           >
                             Seña pagada
                           </button>
                           <button
-                            className="rounded-full border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest hover:border-terracotta hover:text-terracotta"
+                            className="border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest hover:border-terracotta hover:text-terracotta"
                             onClick={() => handleUpdate(reservation, { status: 'cancelled' })}
                           >
                             Cancelar
@@ -360,7 +405,7 @@ export default function AdminTurnos() {
                   ))
                 ) : (
                   <tr>
-                    <td className="rounded-2xl bg-ink/70 px-4 py-6 text-center text-ash" colSpan={7}>
+                    <td className="bg-ink/70 px-4 py-6 text-center text-ash" colSpan={7}>
                       No hay reservas para esta vista.
                     </td>
                   </tr>
@@ -375,7 +420,7 @@ export default function AdminTurnos() {
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-ash">Agenda por horario</p>
             <div className="grid gap-4">
               {reservationsByTime.map(({ time, reservation }) => (
-                <article key={time} className="rounded-3xl border border-line bg-night/90 p-5 shadow-soft-card">
+                <article key={time} className="border border-line bg-night/90 p-5 shadow-soft-card">
                   <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                     <div>
                       <p className="text-xs font-bold uppercase tracking-widest text-ash">{time}</p>
@@ -400,19 +445,19 @@ export default function AdminTurnos() {
                     {reservation ? (
                       <div className="flex flex-wrap gap-2">
                         <button
-                          className="rounded-full border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
+                          className="border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
                           onClick={() => handleUpdate(reservation, { depositStatus: 'paid', status: 'confirmed' })}
                         >
                           Seña pagada
                         </button>
                         <button
-                          className="rounded-full border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
+                          className="border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
                           onClick={() => handleUpdate(reservation, { status: 'confirmed' })}
                         >
                           Confirmar
                         </button>
                         <button
-                          className="rounded-full border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-terracotta hover:text-terracotta"
+                          className="border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-terracotta hover:text-terracotta"
                           onClick={() => handleUpdate(reservation, { status: 'cancelled' })}
                         >
                           Cancelar

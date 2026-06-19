@@ -326,6 +326,11 @@ select {
   gap: 1.25rem;
 }
 
+.admin-reservations-table th,
+.admin-reservations-table td {
+  vertical-align: top;
+}
+
 .review-slide {
   min-width: 0;
   flex: 0 0 88%;
