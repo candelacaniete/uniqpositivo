@@ -201,6 +201,10 @@ select {
   gap: 2rem;
 }
 
+.admin-reservations-table {
+  min-width: 760px;
+}
+
 .review-slide {
   min-width: 0;
   flex: 0 0 88%;
