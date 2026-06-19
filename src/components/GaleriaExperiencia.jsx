@@ -3,54 +3,43 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const artworks = [
   {
-    id: 'umbral',
-    title: 'Umbral de luz',
-    artist: 'Artista invitada',
-    year: '2026',
-    theme: 'Inicio del recorrido',
-    palette: ['#3F4A35', '#8F4A2F', '#D3B383'],
+    id: 'la-pintora',
+    title: 'La pintora',
+    artist: 'Vásquez',
+    year: '2023',
+    size: '70 x 60',
+    technique: 'Óleo sobre tela',
+    theme: 'Retrato y oficio',
+    image: '/artworks/la-pintora.jpg',
+    palette: ['#C94B36', '#F2C414', '#1D5F9E'],
     context:
-      'Una pieza pensada como entrada al universo Uniq: luz baja, materia orgánica y una sensación de tránsito entre cuidado personal y contemplación artística.',
+      'Una figura sostiene el gesto de pintar como una escena íntima: color, mirada y naturaleza se cruzan para hablar del oficio creativo como forma de identidad.',
   },
   {
-    id: 'botanica',
-    title: 'Botánica interior',
-    artist: 'Artista invitado',
-    year: '2025',
-    theme: 'Naturaleza y cuerpo',
-    palette: ['#23301F', '#6F7B55', '#D7C29F'],
+    id: 'la-chica-de-azul',
+    title: 'La chica de azul',
+    artist: 'Vásquez',
+    year: '2023',
+    size: null,
+    technique: null,
+    theme: 'Silencio azul',
+    image: '/artworks/la-chica-de-azul.jpg',
+    palette: ['#446B7B', '#C79237', '#E5C27C'],
     context:
-      'La obra trabaja capas vegetales como metáfora de transformación: lo que crece, lo que se poda y lo que vuelve a tomar forma.',
+      'Un retrato sereno donde el azul funciona como atmósfera. La obra invita a mirar la pausa, el perfil y la elegancia de un gesto contenido.',
   },
   {
-    id: 'ritual',
-    title: 'Ritual de luz',
-    artist: 'Colectivo Uniq',
-    year: '2026',
-    theme: 'Oficio y energía',
-    palette: ['#241913', '#9A5A38', '#E0C79D'],
+    id: 'titulo-en-contraste',
+    title: 'Título en contraste',
+    artist: 'Vásquez',
+    year: '2023',
+    size: '45 x 60',
+    technique: 'Óleo sobre tela',
+    theme: 'Contraste y presencia',
+    image: '/artworks/titulo-en-contraste.jpg',
+    palette: ['#213F3A', '#E77E20', '#E7C9C1'],
     context:
-      'Esta pieza acompaña la idea de ritual: manos, tiempo, textura y una luz que no ilumina todo, sino aquello que merece ser mirado de cerca.',
-  },
-  {
-    id: 'rondeau',
-    title: 'Rondeau 3352',
-    artist: 'Artista residente',
-    year: '2024',
-    theme: 'Territorio',
-    palette: ['#2F392B', '#A47F5F', '#E8D3B6'],
-    context:
-      'Una lectura del espacio físico de Uniq como punto de encuentro entre barrio, salón, obra y experiencia.',
-  },
-  {
-    id: 'cuerpo',
-    title: 'Cuerpo de flor',
-    artist: 'Artista invitada',
-    year: '2025',
-    theme: 'Cierre sensible',
-    palette: ['#4D372C', '#8F4A2F', '#C9AA82'],
-    context:
-      'El cierre del recorrido vuelve al cuerpo: no como forma fija, sino como superficie viva, sensible y en permanente composición.',
+      'Una pieza de perfil fuerte, con planos de color y una composición de alto contraste que une figura, materia y gesto contemporáneo.',
   },
 ];
 
@@ -97,24 +86,27 @@ function artworkImage(artwork, blur = false) {
 }
 
 function artworkWhatsappLink(artwork) {
-  const text = `Hola! Quiero consultar por esta obra de la galería Uniq Positivo: ${artwork.title} · ${artwork.artist} · ${artwork.year}.`;
+  const details = [artwork.title, artwork.artist, artwork.year, artwork.size, artwork.technique].filter(Boolean).join(' · ');
+  const text = `Hola! Quiero consultar por esta obra de la galería Uniq Positivo: ${details}.`;
   return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
 }
 
 function BlurUpArtwork({ artwork, onZoom }) {
   const [loaded, setLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const imageSrc = artwork.image && !imageError ? artwork.image : artworkImage(artwork);
 
   return (
     <button type="button" className="story-artwork-button" onClick={() => onZoom(artwork)} aria-label={`Ver detalle de ${artwork.title}`}>
       <img className="story-artwork-blur" src={artworkImage(artwork, true)} alt="" aria-hidden="true" />
-      {/* TODO: reemplazar src generado por imagen real optimizada de la obra */}
       <img
         className={`story-artwork-image ${loaded ? 'loaded' : ''}`}
-        src={artworkImage(artwork)}
+        src={imageSrc}
         alt={`${artwork.title}, obra de ${artwork.artist}`}
         loading="lazy"
         decoding="async"
         onLoad={() => setLoaded(true)}
+        onError={() => setImageError(true)}
       />
       <span className="story-zoom-hint">Tap para ver textura</span>
     </button>
@@ -123,6 +115,7 @@ function BlurUpArtwork({ artwork, onZoom }) {
 
 function ArtworkMoment({ artwork, index, onZoom }) {
   const [expanded, setExpanded] = useState(false);
+  const artworkDetails = [artwork.size, artwork.technique].filter(Boolean).join(' · ');
 
   return (
     <motion.section
@@ -156,6 +149,7 @@ function ArtworkMoment({ artwork, index, onZoom }) {
         <p className="story-meta">
           {artwork.artist} · {artwork.year}
         </p>
+        {artworkDetails ? <p className="story-meta">{artworkDetails}</p> : null}
         <div className="story-actions">
           <button type="button" className="story-info-button" onClick={() => setExpanded((current) => !current)}>
             {expanded ? 'Cerrar info' : '+ info'}
@@ -184,6 +178,7 @@ function ArtworkMoment({ artwork, index, onZoom }) {
 
 function ZoomModal({ artwork, onClose }) {
   if (!artwork) return null;
+  const artworkDetails = [artwork.size, artwork.technique].filter(Boolean).join(' · ');
 
   return (
     <AnimatePresence>
@@ -205,12 +200,20 @@ function ZoomModal({ artwork, onClose }) {
           transition={{ duration: 0.35 }}
           onClick={(event) => event.stopPropagation()}
         >
-          <img src={artworkImage(artwork)} alt={`Detalle ampliado de ${artwork.title}`} />
+          <img
+            src={artwork.image || artworkImage(artwork)}
+            alt={`Detalle ampliado de ${artwork.title}`}
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = artworkImage(artwork);
+            }}
+          />
           <div>
             <h2>{artwork.title}</h2>
             <p>
               {artwork.artist} · {artwork.year}
             </p>
+            {artworkDetails ? <p>{artworkDetails}</p> : null}
           </div>
         </motion.div>
       </motion.div>
