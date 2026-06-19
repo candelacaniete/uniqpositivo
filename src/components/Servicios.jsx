@@ -105,19 +105,18 @@ export default function Servicios() {
   };
 
   return (
-    <section id="servicios" className="section-shell bg-ink px-5 py-24 md:px-8">
-      <div className="decor-flower -left-16 top-12" />
+    <section id="servicios" className="section-shell bg-night px-5 py-24 md:px-8">
       <div className="mx-auto max-w-6xl">
         <motion.div
-          className="mb-12 max-w-3xl"
+          className="mb-12 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.6 }}
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Servicios</p>
-          <h2 className="font-serif text-5xl font-semibold leading-none text-cream md:text-7xl">Elegí tu combo y reservá</h2>
-          <p className="mt-6 max-w-2xl leading-8 text-ash">
+          <h2 className="editorial-section-title">Elegí tu combo y reservá</h2>
+          <p className="mx-auto mt-6 max-w-2xl leading-8 text-ash">
             Cada combo abre una ficha de reserva con disponibilidad, datos de contacto, estado de seña y control interno de turnos.
           </p>
           {storageMode === 'demo' ? (
@@ -132,8 +131,8 @@ export default function Servicios() {
           {services.map(({ name, description, price, Icon }, index) => (
             <motion.article
               key={name}
-              className={`accent-border cursor-pointer rounded-3xl border p-5 shadow-soft-card transition hover:-translate-y-1 md:p-6 ${
-                selectedService.name === name ? 'border-terracotta bg-warm/80' : 'border-line bg-night'
+              className={`cursor-pointer border p-5 transition md:p-6 ${
+                selectedService.name === name ? 'border-cream bg-ink' : 'border-line bg-night'
               }`}
               custom={index}
               variants={cardVariants}
@@ -148,7 +147,7 @@ export default function Servicios() {
               }}
             >
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-line bg-ink text-moss">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-line bg-ink text-ash">
                     <Icon size={24} strokeWidth={1.5} />
                   </div>
                   <div className="min-w-0">
@@ -172,7 +171,7 @@ export default function Servicios() {
           </div>
 
           <motion.form
-            className="rounded-3xl border border-line bg-night/90 p-6 shadow-soft-card md:p-8"
+            className="border border-line bg-ink p-6 md:p-8"
             initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
