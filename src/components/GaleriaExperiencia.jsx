@@ -96,6 +96,11 @@ function artworkImage(artwork, blur = false) {
   `);
 }
 
+function artworkWhatsappLink(artwork) {
+  const text = `Hola! Quiero consultar por esta obra de la galería Uniq Positivo: ${artwork.title} · ${artwork.artist} · ${artwork.year}.`;
+  return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
+}
+
 function BlurUpArtwork({ artwork, onZoom }) {
   const [loaded, setLoaded] = useState(false);
 
@@ -151,9 +156,14 @@ function ArtworkMoment({ artwork, index, onZoom }) {
         <p className="story-meta">
           {artwork.artist} · {artwork.year}
         </p>
-        <button type="button" className="story-info-button" onClick={() => setExpanded((current) => !current)}>
-          {expanded ? 'Cerrar info' : '+ info'}
-        </button>
+        <div className="story-actions">
+          <button type="button" className="story-info-button" onClick={() => setExpanded((current) => !current)}>
+            {expanded ? 'Cerrar info' : '+ info'}
+          </button>
+          <a className="story-info-button" href={artworkWhatsappLink(artwork)} target="_blank" rel="noreferrer">
+            Consultar por esta obra
+          </a>
+        </div>
         <AnimatePresence initial={false}>
           {expanded ? (
             <motion.p

@@ -518,6 +518,13 @@ select {
   font-size: 1rem;
 }
 
+.story-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
 .story-info-button {
   margin-top: 2rem;
   border: 1px solid rgba(36, 25, 19, 0.22);
@@ -533,6 +540,10 @@ select {
     background 220ms ease,
     color 220ms ease,
     border-color 220ms ease;
+}
+
+.story-actions .story-info-button {
+  margin-top: 0;
 }
 
 .story-info-button:hover,
