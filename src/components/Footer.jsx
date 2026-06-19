@@ -13,7 +13,7 @@ export default function Footer() {
           <p>Centro de belleza y galería de arte.</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Dirección</p>
             <p>Rondeau 3352, CABA</p>
@@ -38,6 +38,12 @@ export default function Footer() {
           <div>
             <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Horarios</p>
             <p>Mar a sáb · 10:00 a 19:00</p>
+          </div>
+          <div>
+            <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Interno</p>
+            <a className="transition hover:text-cream" href="/admin-turnos">
+              Acceso admin
+            </a>
           </div>
         </div>
       </div>

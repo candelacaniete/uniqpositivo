@@ -39,6 +39,12 @@ export default function Navbar() {
               <span className="absolute -bottom-2 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
+          <a
+            href="/admin-turnos"
+            className="rounded-full border border-line bg-night px-4 py-2 text-xs font-bold uppercase tracking-widest text-cream/80 transition hover:border-moss hover:text-moss"
+          >
+            Admin
+          </a>
         </div>
 
         <button
@@ -65,6 +71,13 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+            <a
+              href="/admin-turnos"
+              className="rounded-2xl border border-line bg-night px-4 py-3 text-sm font-bold uppercase tracking-widest text-cream/86"
+              onClick={() => setIsOpen(false)}
+            >
+              Acceso admin
+            </a>
           </div>
         </div>
       ) : null}
