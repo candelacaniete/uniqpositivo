@@ -6,10 +6,12 @@ import Galeria from './components/Galeria.jsx';
 import Productos from './components/Productos.jsx';
 import Footer from './components/Footer.jsx';
 import GaleriaExperiencia from './components/GaleriaExperiencia.jsx';
+import AdminTurnos from './components/AdminTurnos.jsx';
 
 export default function App() {
   const normalizedPath = window.location.pathname.replace(/\/$/, '') || '/';
   const isGalleryPage = normalizedPath === '/galeria';
+  const isAdminPage = normalizedPath === '/admin-turnos';
 
   const handleHeroGalleryClick = () => {
     document.getElementById('galeria-puente')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -17,6 +19,10 @@ export default function App() {
 
   if (isGalleryPage) {
     return <GaleriaExperiencia />;
+  }
+
+  if (isAdminPage) {
+    return <AdminTurnos />;
   }
 
   return (

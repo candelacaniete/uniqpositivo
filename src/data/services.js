@@ -1,0 +1,55 @@
+import { Heart, Sparkles, Star, WandSparkles } from 'lucide-react';
+
+export const availableTimes = ['10:00', '11:30', '13:00', '15:00', '16:30', '18:00'];
+
+export const services = [
+  {
+    id: 'combo-renovacion',
+    name: 'Combo Renovación',
+    description: 'Color en raíces + nutrición post color de colágeno y vitaminas.',
+    price: '$77.000',
+    priceAmount: 77000,
+    deposit: '$10.000',
+    depositAmount: 10000,
+    duration: '120 min aprox.',
+    durationMinutes: 120,
+    Icon: WandSparkles,
+  },
+  {
+    id: 'combo-brillo',
+    name: 'Combo Brillo',
+    description: "Corte de cabello + lavado L'Oreal Professionel + nutrición de colágeno y karité.",
+    price: '$47.000',
+    priceAmount: 47000,
+    deposit: null,
+    depositAmount: null,
+    duration: '90 min aprox.',
+    durationMinutes: 90,
+    Icon: Sparkles,
+  },
+  {
+    id: 'combo-estrella',
+    name: 'Combo Estrella',
+    description: 'Corte + lavado + tratamiento personalizado para nutrición, hidratación y restauración capilar.',
+    price: '$97.000',
+    priceAmount: 97000,
+    deposit: null,
+    depositAmount: null,
+    duration: '120 min aprox.',
+    durationMinutes: 120,
+    Icon: Star,
+  },
+  {
+    id: 'combo-amor-propio',
+    name: 'Combo Amor Propio',
+    description:
+      'Color raíz hasta 3 cm de crecimiento + corte + tratamiento personalizado de nutrición, hidratación y reparación.',
+    price: '$159.000',
+    priceAmount: 159000,
+    deposit: null,
+    depositAmount: null,
+    duration: '180 min aprox.',
+    durationMinutes: 180,
+    Icon: Heart,
+  },
+];

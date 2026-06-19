@@ -1,41 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, Star, WandSparkles } from 'lucide-react';
-
-const services = [
-  {
-    name: 'Combo Renovación',
-    description: 'Color en raíces + nutrición post color de colágeno y vitaminas.',
-    price: '$77.000',
-    deposit: '$10.000',
-    duration: '120 min aprox.',
-    Icon: WandSparkles,
-  },
-  {
-    name: 'Combo Brillo',
-    description: "Corte de cabello + lavado L'Oreal Professionel + nutrición de colágeno y karité.",
-    price: '$47.000',
-    duration: '90 min aprox.',
-    Icon: Sparkles,
-  },
-  {
-    name: 'Combo Estrella',
-    description: 'Corte + lavado + tratamiento personalizado para nutrición, hidratación y restauración capilar.',
-    price: '$97.000',
-    duration: '120 min aprox.',
-    Icon: Star,
-  },
-  {
-    name: 'Combo Amor Propio',
-    description:
-      'Color raíz hasta 3 cm de crecimiento + corte + tratamiento personalizado de nutrición, hidratación y reparación.',
-    price: '$159.000',
-    duration: '180 min aprox.',
-    Icon: Heart,
-  },
-];
-
-const availableTimes = ['10:00', '11:30', '13:00', '15:00', '16:30', '18:00'];
+import { availableTimes, services } from '../data/services.js';
+import { createReservation, getBookedTimes, getReservationStorageMode } from '../lib/reservations.js';
 
 function getToday() {
   return new Date().toISOString().split('T')[0];
@@ -54,15 +20,74 @@ export default function Servicios() {
   const [selectedService, setSelectedService] = useState(services[0]);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [clientName, setClientName] = useState('');
+  const [clientPhone, setClientPhone] = useState('');
+  const [clientInstagram, setClientInstagram] = useState('');
+  const [bookedTimes, setBookedTimes] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formMessage, setFormMessage] = useState('');
+  const [reservation, setReservation] = useState(null);
 
-  const isComplete = Boolean(selectedService && date && time);
+  const isComplete = Boolean(selectedService && date && time && clientName && clientPhone);
   const whatsappHref = useMemo(() => {
     const depositText = selectedService.deposit ? ` Seña: ${selectedService.deposit}.` : '';
-    const text = `Hola! Quiero reservar un turno para ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText} Duración aproximada: ${selectedService.duration}.`;
+    const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText} Duración aproximada: ${selectedService.duration}. Mi nombre es ${clientName}.`;
     return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
-  }, [date, selectedService, time]);
+  }, [clientName, date, selectedService, time]);
 
   const SelectedIcon = selectedService.Icon;
+  const storageMode = getReservationStorageMode();
+
+  useEffect(() => {
+    if (!date) {
+      setBookedTimes([]);
+      return undefined;
+    }
+
+    let ignore = false;
+    getBookedTimes(date)
+      .then((times) => {
+        if (!ignore) setBookedTimes(times);
+      })
+      .catch(() => {
+        if (!ignore) setFormMessage('No pudimos consultar disponibilidad. Intentá de nuevo.');
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [date]);
+
+  const handleReservationSubmit = async (event) => {
+    event.preventDefault();
+    if (!isComplete || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setFormMessage('');
+
+    try {
+      const createdReservation = await createReservation({
+        service: selectedService,
+        date,
+        time,
+        clientName,
+        clientPhone,
+        clientInstagram,
+      });
+
+      setReservation(createdReservation);
+      setFormMessage(
+        selectedService.depositAmount
+          ? 'Turno tomado. Queda pendiente confirmar la seña para bloquearlo definitivamente.'
+          : 'Turno confirmado y guardado.',
+      );
+      setBookedTimes((currentTimes) => [...new Set([...currentTimes, time])]);
+    } catch (error) {
+      setFormMessage(error.message || 'No pudimos guardar el turno. Intentá con otro horario.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section id="servicios" className="section-shell bg-ink px-5 py-24 md:px-8">
@@ -78,8 +103,13 @@ export default function Servicios() {
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Servicios</p>
           <h2 className="font-serif text-5xl font-semibold leading-none text-cream md:text-7xl">Elegí tu combo y reservá</h2>
           <p className="mt-6 max-w-2xl leading-8 text-ash">
-            Cada combo abre su propia ficha de turno con descripción, valor, duración estimada y confirmación directa por WhatsApp.
+            Cada combo abre una ficha de reserva con disponibilidad, datos de contacto, estado de seña y control interno de turnos.
           </p>
+          {storageMode === 'demo' ? (
+            <p className="mt-4 max-w-2xl rounded-2xl border border-line bg-night/80 px-4 py-3 text-sm leading-6 text-ash">
+              Modo demo: las reservas se guardan en este navegador. Configurá Supabase para persistencia real compartida.
+            </p>
+          ) : null}
         </motion.div>
 
         <div className="services-booking-grid">
@@ -98,6 +128,8 @@ export default function Servicios() {
               onClick={() => {
                 setSelectedService(services[index]);
                 setTime('');
+                setReservation(null);
+                setFormMessage('');
               }}
             >
                 <div className="flex items-start gap-4">
@@ -130,7 +162,7 @@ export default function Servicios() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.6 }}
-            onSubmit={(event) => event.preventDefault()}
+            onSubmit={handleReservationSubmit}
           >
             <div className="mb-6 flex items-start gap-4">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-moss text-night">
@@ -169,27 +201,70 @@ export default function Servicios() {
                   min={getToday()}
                   className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 text-cream outline-none transition focus:border-transparent"
                   value={date}
-                  onChange={(event) => setDate(event.target.value)}
+                  onChange={(event) => {
+                    setDate(event.target.value);
+                    setTime('');
+                    setReservation(null);
+                    setFormMessage('');
+                  }}
                 />
               </span>
             </label>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="mb-3 block text-sm font-semibold text-cream">Nombre</span>
+                <input
+                  className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 text-cream outline-none transition focus:border-moss"
+                  value={clientName}
+                  onChange={(event) => setClientName(event.target.value)}
+                  placeholder="Tu nombre"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-3 block text-sm font-semibold text-cream">Teléfono</span>
+                <input
+                  className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 text-cream outline-none transition focus:border-moss"
+                  value={clientPhone}
+                  onChange={(event) => setClientPhone(event.target.value)}
+                  placeholder="+54 11..."
+                />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className="mb-3 block text-sm font-semibold text-cream">Instagram opcional</span>
+                <input
+                  className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 text-cream outline-none transition focus:border-moss"
+                  value={clientInstagram}
+                  onChange={(event) => setClientInstagram(event.target.value)}
+                  placeholder="@usuario"
+                />
+              </label>
+            </div>
 
             <fieldset className="mt-6">
               <legend className="mb-3 text-sm font-semibold text-cream">Horario</legend>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {availableTimes.map((slot) => {
                   const active = slot === time;
+                  const booked = bookedTimes.includes(slot);
 
                   return (
                     <button
                       key={slot}
                       type="button"
+                      disabled={booked}
                       className={`rounded-full border px-4 py-3 text-sm font-semibold transition ${
                         active
                           ? 'border-transparent bg-moss text-night shadow-glow'
-                          : 'border-line bg-ink/70 text-cream hover:border-moss hover:text-moss'
+                          : booked
+                            ? 'cursor-not-allowed border-line bg-line/40 text-ash line-through'
+                            : 'border-line bg-ink/70 text-cream hover:border-moss hover:text-moss'
                       }`}
-                      onClick={() => setTime(slot)}
+                      onClick={() => {
+                        setTime(slot);
+                        setReservation(null);
+                        setFormMessage('');
+                      }}
                     >
                       {slot}
                     </button>
@@ -198,22 +273,37 @@ export default function Servicios() {
               </div>
             </fieldset>
 
-            <a
-              href={isComplete ? whatsappHref : '#servicios'}
-              aria-disabled={!isComplete}
+            <button
+              type="submit"
+              disabled={!isComplete || isSubmitting}
               className={`mt-8 flex w-full justify-center rounded-full px-6 py-4 text-sm font-bold uppercase tracking-widest transition ${
                 isComplete
                   ? 'bg-accent text-night shadow-glow hover:-translate-y-0.5'
                   : 'cursor-not-allowed border border-line bg-ink/60 text-ash'
               }`}
-              onClick={(event) => {
-                if (!isComplete) event.preventDefault();
-              }}
-              target={isComplete ? '_blank' : undefined}
-              rel={isComplete ? 'noreferrer' : undefined}
             >
-              Enviar por WhatsApp
-            </a>
+              {isSubmitting ? 'Guardando...' : 'Reservar turno'}
+            </button>
+
+            {formMessage ? <p className="mt-4 rounded-2xl border border-line bg-ink/70 p-4 text-sm leading-6 text-ash">{formMessage}</p> : null}
+
+            {reservation ? (
+              <div className="mt-4 rounded-2xl border border-moss/40 bg-ink/70 p-4">
+                <p className="text-sm font-semibold text-cream">Reserva #{reservation.id.slice(0, 8)}</p>
+                <p className="mt-2 text-sm leading-6 text-ash">
+                  Estado: {reservation.status === 'pending_deposit' ? 'pendiente de seña' : 'confirmada'} · Seña:{' '}
+                  {reservation.depositStatus === 'pending' ? 'pendiente' : reservation.depositStatus}
+                </p>
+                <a
+                  className="mt-4 inline-flex rounded-full border border-line px-5 py-3 text-xs font-bold uppercase tracking-widest text-cream transition hover:border-moss hover:text-moss"
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Avisar por WhatsApp
+                </a>
+              </div>
+            ) : null}
           </motion.form>
         </div>
       </div>
