@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { availableTimes, services } from '../data/services.js';
+import { services } from '../data/services.js';
 import { createReservation, getBookedTimes, getReservationStorageMode } from '../lib/reservations.js';
+import { defaultBusinessSettings, getBusinessSettings, isWorkingDay } from '../lib/settings.js';
 
 function getToday() {
   return new Date().toISOString().split('T')[0];
@@ -27,16 +28,30 @@ export default function Servicios() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formMessage, setFormMessage] = useState('');
   const [reservation, setReservation] = useState(null);
+  const [settings, setSettings] = useState(defaultBusinessSettings);
 
-  const isComplete = Boolean(selectedService && date && time && clientName && clientPhone);
+  const selectedDateIsWorkingDay = isWorkingDay(date, settings.workingDays);
+  const isComplete = Boolean(selectedService && date && time && clientName && clientPhone && selectedDateIsWorkingDay);
   const whatsappHref = useMemo(() => {
     const depositText = selectedService.deposit ? ` Seña: ${selectedService.deposit}.` : '';
-    const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText} Duración aproximada: ${selectedService.duration}. Mi nombre es ${clientName}.`;
+    const aliasText = selectedService.depositAmount ? ` Alias para seña: ${settings.depositAlias}.` : '';
+    const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText}${aliasText} Duración aproximada: ${selectedService.duration}. Mi nombre es ${clientName}.`;
     return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
-  }, [clientName, date, selectedService, time]);
+  }, [clientName, date, selectedService, settings.depositAlias, time]);
 
   const SelectedIcon = selectedService.Icon;
   const storageMode = getReservationStorageMode();
+
+  useEffect(() => {
+    let ignore = false;
+    getBusinessSettings().then((nextSettings) => {
+      if (!ignore) setSettings(nextSettings);
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!date) {
@@ -78,7 +93,7 @@ export default function Servicios() {
       setReservation(createdReservation);
       setFormMessage(
         selectedService.depositAmount
-          ? 'Turno tomado. Queda pendiente confirmar la seña para bloquearlo definitivamente.'
+          ? `Turno tomado. Para terminar de confirmar tu turno aboná la seña al alias: ${settings.depositAlias}.`
           : 'Turno confirmado y guardado.',
       );
       setBookedTimes((currentTimes) => [...new Set([...currentTimes, time])]);
@@ -189,6 +204,9 @@ export default function Servicios() {
                 <div className="rounded-3xl border border-line bg-ink/70 p-4 sm:col-span-2">
                   <p className="text-xs uppercase tracking-widest text-ash">Seña</p>
                   <p className="mt-2 font-serif text-2xl font-semibold text-cream">{selectedService.deposit}</p>
+                  <p className="mt-3 text-sm leading-6 text-ash">
+                    Para terminar de confirmar tu turno aboná la seña al alias: <span className="font-semibold text-cream">{settings.depositAlias}</span>
+                  </p>
                 </div>
               ) : null}
             </div>
@@ -209,6 +227,9 @@ export default function Servicios() {
                   }}
                 />
               </span>
+              {!selectedDateIsWorkingDay ? (
+                <span className="mt-3 block text-sm text-ash">Ese día no está configurado como día laboral.</span>
+              ) : null}
             </label>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -244,19 +265,20 @@ export default function Servicios() {
             <fieldset className="mt-6">
               <legend className="mb-3 text-sm font-semibold text-cream">Horario</legend>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {availableTimes.map((slot) => {
+                {settings.timeSlots.map((slot) => {
                   const active = slot === time;
                   const booked = bookedTimes.includes(slot);
+                  const disabled = booked || !selectedDateIsWorkingDay;
 
                   return (
                     <button
                       key={slot}
                       type="button"
-                      disabled={booked}
+                      disabled={disabled}
                       className={`rounded-full border px-4 py-3 text-sm font-semibold transition ${
                         active
                           ? 'border-transparent bg-moss text-night shadow-glow'
-                          : booked
+                          : disabled
                             ? 'cursor-not-allowed border-line bg-line/40 text-ash line-through'
                             : 'border-line bg-ink/70 text-cream hover:border-moss hover:text-moss'
                       }`}

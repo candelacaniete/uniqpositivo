@@ -1,7 +1,5 @@
 import { Heart, Sparkles, Star, WandSparkles } from 'lucide-react';
 
-export const availableTimes = ['10:00', '11:30', '13:00', '15:00', '16:30', '18:00'];
-
 export const services = [
   {
     id: 'combo-renovacion',

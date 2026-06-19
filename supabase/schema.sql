@@ -32,12 +32,26 @@ create table if not exists public.reservations (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.business_settings (
+  id text primary key default 'main',
+  deposit_alias text not null default 'xxx',
+  working_days integer[] not null default array[2, 3, 4, 5, 6],
+  time_slots text[] not null default array['10:00', '11:30', '13:00', '15:00', '16:30', '18:00'],
+  updated_at timestamptz not null default now()
+);
+
 create unique index if not exists reservations_unique_active_slot
   on public.reservations (reservation_date, reservation_time)
   where status in ('pending_deposit', 'confirmed');
 
 alter table public.services enable row level security;
 alter table public.reservations enable row level security;
+alter table public.business_settings enable row level security;
+
+grant usage on schema public to anon, authenticated;
+grant select on table public.services to anon, authenticated;
+grant insert, select, update on table public.reservations to anon, authenticated;
+grant insert, select, update on table public.business_settings to anon, authenticated;
 
 create policy "Public can read active services"
   on public.services for select
@@ -55,5 +69,18 @@ create policy "MVP admin can read reservations"
 
 create policy "MVP admin can update reservations"
   on public.reservations for update
+  using (true)
+  with check (true);
+
+create policy "Public can read business settings"
+  on public.business_settings for select
+  using (true);
+
+create policy "MVP admin can insert business settings"
+  on public.business_settings for insert
+  with check (true);
+
+create policy "MVP admin can update business settings"
+  on public.business_settings for update
   using (true)
   with check (true);

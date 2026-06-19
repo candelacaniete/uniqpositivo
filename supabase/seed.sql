@@ -68,3 +68,16 @@ on conflict (id) do update set
   duration_label = excluded.duration_label,
   duration_minutes = excluded.duration_minutes,
   active = excluded.active;
+
+insert into public.business_settings (
+  id,
+  deposit_alias,
+  working_days,
+  time_slots
+) values (
+  'main',
+  'xxx',
+  array[2, 3, 4, 5, 6],
+  array['10:00', '11:30', '13:00', '15:00', '16:30', '18:00']
+)
+on conflict (id) do nothing;

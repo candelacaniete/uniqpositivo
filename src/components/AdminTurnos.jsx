@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { availableTimes } from '../data/services.js';
 import { getReservationStorageMode, listReservations, updateReservation } from '../lib/reservations.js';
+import { dayOptions, defaultBusinessSettings, getBusinessSettings, updateBusinessSettings } from '../lib/settings.js';
 
 function getToday() {
   return new Date().toISOString().split('T')[0];
@@ -36,6 +36,14 @@ export default function AdminTurnos() {
   const [reservations, setReservations] = useState([]);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [settings, setSettings] = useState(defaultBusinessSettings);
+  const [settingsDraft, setSettingsDraft] = useState({
+    depositAlias: defaultBusinessSettings.depositAlias,
+    workingDays: defaultBusinessSettings.workingDays,
+    timeSlotsText: defaultBusinessSettings.timeSlots.join(', '),
+  });
+  const [settingsMessage, setSettingsMessage] = useState('');
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
   const storageMode = getReservationStorageMode();
   const configuredUser = import.meta.env.VITE_ADMIN_USER || 'admin';
   const configuredPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin';
@@ -53,9 +61,20 @@ export default function AdminTurnos() {
     }
   };
 
+  const loadSettings = async () => {
+    const nextSettings = await getBusinessSettings();
+    setSettings(nextSettings);
+    setSettingsDraft({
+      depositAlias: nextSettings.depositAlias,
+      workingDays: nextSettings.workingDays,
+      timeSlotsText: nextSettings.timeSlots.join(', '),
+    });
+  };
+
   useEffect(() => {
     if (authorized) {
       loadReservations();
+      loadSettings();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorized, date, viewMode]);
@@ -89,7 +108,27 @@ export default function AdminTurnos() {
     }
   };
 
-  const reservationsByTime = availableTimes.map((time) => ({
+  const handleSettingsSave = async (event) => {
+    event.preventDefault();
+    setIsSavingSettings(true);
+    setSettingsMessage('');
+
+    try {
+      const nextSettings = await updateBusinessSettings({
+        depositAlias: settingsDraft.depositAlias,
+        workingDays: settingsDraft.workingDays,
+        timeSlots: settingsDraft.timeSlotsText.split(','),
+      });
+      setSettings(nextSettings);
+      setSettingsMessage('Configuración guardada.');
+    } catch (error) {
+      setSettingsMessage(error.message || 'No pudimos guardar la configuración.');
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
+  const reservationsByTime = settings.timeSlots.map((time) => ({
     time,
     reservation: reservations.find((item) => item.time === time),
   }));
@@ -182,6 +221,70 @@ export default function AdminTurnos() {
         </div>
 
         {message ? <p className="mt-6 rounded-2xl border border-line bg-night p-4 text-sm text-ash">{message}</p> : null}
+
+        <section className="mt-10 rounded-3xl border border-line bg-night/90 p-5 shadow-soft-card">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-ash">Configuración</p>
+            <h2 className="mt-1 font-serif text-4xl font-semibold">Agenda y señas</h2>
+          </div>
+
+          <form className="admin-settings-grid mt-6" onSubmit={handleSettingsSave}>
+            <label className="block">
+              <span className="mb-3 block text-sm font-semibold text-cream">Alias para señas</span>
+              <input
+                className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+                value={settingsDraft.depositAlias}
+                onChange={(event) => setSettingsDraft((current) => ({ ...current, depositAlias: event.target.value }))}
+                placeholder="alias.mp"
+              />
+            </label>
+
+            <fieldset>
+              <legend className="mb-3 text-sm font-semibold text-cream">Días laborales</legend>
+              <div className="grid grid-cols-2 gap-2">
+                {dayOptions.map((day) => {
+                  const checked = settingsDraft.workingDays.includes(day.value);
+
+                  return (
+                    <label key={day.value} className="flex items-center gap-2 rounded-2xl border border-line bg-ink/70 px-3 py-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(event) => {
+                          setSettingsDraft((current) => ({
+                            ...current,
+                            workingDays: event.target.checked
+                              ? [...current.workingDays, day.value]
+                              : current.workingDays.filter((value) => value !== day.value),
+                          }));
+                        }}
+                      />
+                      {day.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <label className="block">
+              <span className="mb-3 block text-sm font-semibold text-cream">Horarios</span>
+              <textarea
+                className="min-h-32 w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+                value={settingsDraft.timeSlotsText}
+                onChange={(event) => setSettingsDraft((current) => ({ ...current, timeSlotsText: event.target.value }))}
+                placeholder="10:00, 11:30, 13:00"
+              />
+              <span className="mt-2 block text-xs text-ash">Separá cada horario con coma.</span>
+            </label>
+
+            <div className="lg:col-span-3">
+              <button className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-widest text-night" disabled={isSavingSettings}>
+                {isSavingSettings ? 'Guardando...' : 'Guardar configuración'}
+              </button>
+              {settingsMessage ? <p className="mt-3 text-sm text-ash">{settingsMessage}</p> : null}
+            </div>
+          </form>
+        </section>
 
         <section className="mt-10 rounded-3xl border border-line bg-night/90 p-5 shadow-soft-card">
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">

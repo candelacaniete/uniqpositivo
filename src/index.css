@@ -205,6 +205,11 @@ select {
   min-width: 760px;
 }
 
+.admin-settings-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
 .review-slide {
   min-width: 0;
   flex: 0 0 88%;
@@ -550,6 +555,10 @@ select {
   .footer-grid {
     grid-template-columns: 1.1fr 2fr;
     align-items: start;
+  }
+
+  .admin-settings-grid {
+    grid-template-columns: 0.8fr 1fr 1fr;
   }
 
   .review-slide {
