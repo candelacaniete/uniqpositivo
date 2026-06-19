@@ -1,14 +1,63 @@
+import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const artworks = [
-  { title: 'Umbral de luz', artist: 'Artista invitada', year: '2026', side: 'left', size: 'large' },
-  { title: 'Botánica interior', artist: 'Artista invitado', year: '2025', side: 'right', size: 'medium' },
-  { title: 'Ritual de luz', artist: 'Colectivo Uniq', year: '2026', side: 'left', size: 'small' },
-  { title: 'Rondeau 3352', artist: 'Artista residente', year: '2024', side: 'right', size: 'large' },
-  { title: 'Cuerpo de flor', artist: 'Artista invitada', year: '2025', side: 'back', size: 'medium' },
+  { id: 'umbral', title: 'Umbral de luz', artist: 'Artista invitada', year: '2026', side: 'left', size: 'large' },
+  { id: 'botanica', title: 'Botánica interior', artist: 'Artista invitado', year: '2025', side: 'right', size: 'medium' },
+  { id: 'ritual', title: 'Ritual de luz', artist: 'Colectivo Uniq', year: '2026', side: 'left', size: 'small' },
+  { id: 'rondeau', title: 'Rondeau 3352', artist: 'Artista residente', year: '2024', side: 'right', size: 'large' },
+  { id: 'cuerpo', title: 'Cuerpo de flor', artist: 'Artista invitada', year: '2025', side: 'back', size: 'medium' },
 ];
 
+function ArtworkButton({ artwork, isSelected, onSelect }) {
+  return (
+    <button
+      type="button"
+      className={`gallery-painting ${artwork.size} ${isSelected ? 'selected' : ''}`}
+      aria-pressed={isSelected}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSelect(artwork);
+      }}
+    >
+      <span className="gallery-art-light" />
+      {/* TODO: cargar imagen real del cuadro expuesto */}
+      <span className="gallery-art-surface" />
+      <span className="gallery-art-caption">
+        <span className="gallery-art-title">{artwork.title}</span>
+        <span className="gallery-art-meta">
+          {artwork.artist} · {artwork.year}
+        </span>
+      </span>
+    </button>
+  );
+}
+
 export default function GaleriaExperiencia() {
+  const [look, setLook] = useState({ x: 0, y: 0 });
+  const [selectedArtwork, setSelectedArtwork] = useState(null);
+
+  const roomTransform = useMemo(() => {
+    const focusYaw = selectedArtwork?.side === 'left' ? 13 : selectedArtwork?.side === 'right' ? -13 : 0;
+    const focusLift = selectedArtwork ? -0.55 : 0;
+    const focusZoom = selectedArtwork ? 3.8 : -1.4;
+    const rotateX = 4 - look.y * 4.5;
+    const rotateY = look.x * -10 + focusYaw;
+
+    return `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${focusZoom}rem) translateY(${focusLift}rem)`;
+  }, [look, selectedArtwork]);
+
+  const handlePointerMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+
+    setLook({
+      x: Math.max(-1, Math.min(1, x)),
+      y: Math.max(-1, Math.min(1, y)),
+    });
+  };
+
   return (
     <main className="immersive-gallery min-h-screen overflow-hidden bg-earth text-night">
       <div className="absolute left-5 top-5 z-20 md:left-8 md:top-8">
@@ -29,6 +78,9 @@ export default function GaleriaExperiencia() {
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-night/70">Galería Uniq Positivo</p>
           <h1 className="font-serif text-5xl font-semibold leading-none md:text-7xl">Entrá como visitante.</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-night/72">
+            Mové el cursor o arrastrá con el dedo para cambiar la mirada. Tocá un cuadro para acercarte.
+          </p>
         </motion.div>
 
         <motion.div
@@ -36,22 +88,21 @@ export default function GaleriaExperiencia() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.1 }}
+          onPointerMove={handlePointerMove}
+          onPointerLeave={() => setLook({ x: 0, y: 0 })}
+          onClick={() => setSelectedArtwork(null)}
         >
-          <div className="gallery-room">
+          <div className={`gallery-room ${selectedArtwork ? 'is-focused' : ''}`} style={{ transform: roomTransform }}>
             <div className="gallery-wall gallery-wall-left">
               {artworks
                 .filter((artwork) => artwork.side === 'left')
                 .map((artwork) => (
-                  <article key={artwork.title} className={`gallery-painting ${artwork.size}`}>
-                    {/* TODO: cargar imagen real del cuadro expuesto */}
-                    <div className="gallery-art-surface" />
-                    <div>
-                      <h2>{artwork.title}</h2>
-                      <p>
-                        {artwork.artist} · {artwork.year}
-                      </p>
-                    </div>
-                  </article>
+                  <ArtworkButton
+                    key={artwork.id}
+                    artwork={artwork}
+                    isSelected={selectedArtwork?.id === artwork.id}
+                    onSelect={setSelectedArtwork}
+                  />
                 ))}
             </div>
 
@@ -59,16 +110,12 @@ export default function GaleriaExperiencia() {
               {artworks
                 .filter((artwork) => artwork.side === 'back')
                 .map((artwork) => (
-                  <article key={artwork.title} className={`gallery-painting ${artwork.size}`}>
-                    {/* TODO: cargar imagen real del cuadro expuesto */}
-                    <div className="gallery-art-surface" />
-                    <div>
-                      <h2>{artwork.title}</h2>
-                      <p>
-                        {artwork.artist} · {artwork.year}
-                      </p>
-                    </div>
-                  </article>
+                  <ArtworkButton
+                    key={artwork.id}
+                    artwork={artwork}
+                    isSelected={selectedArtwork?.id === artwork.id}
+                    onSelect={setSelectedArtwork}
+                  />
                 ))}
             </div>
 
@@ -76,16 +123,12 @@ export default function GaleriaExperiencia() {
               {artworks
                 .filter((artwork) => artwork.side === 'right')
                 .map((artwork) => (
-                  <article key={artwork.title} className={`gallery-painting ${artwork.size}`}>
-                    {/* TODO: cargar imagen real del cuadro expuesto */}
-                    <div className="gallery-art-surface" />
-                    <div>
-                      <h2>{artwork.title}</h2>
-                      <p>
-                        {artwork.artist} · {artwork.year}
-                      </p>
-                    </div>
-                  </article>
+                  <ArtworkButton
+                    key={artwork.id}
+                    artwork={artwork}
+                    isSelected={selectedArtwork?.id === artwork.id}
+                    onSelect={setSelectedArtwork}
+                  />
                 ))}
             </div>
 
