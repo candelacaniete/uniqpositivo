@@ -88,6 +88,13 @@ select {
   filter: none;
 }
 
+.top-announcement-bar {
+  background: #7A6250;
+  color: #F8F1E7;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+}
+
 .section-shell {
   position: relative;
   overflow: hidden;

@@ -14,7 +14,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed left-0 top-0 z-40 w-full border-b border-line bg-night/92 backdrop-blur-md">
-      <div className="bg-warm px-5 py-2 text-center text-[0.68rem] font-bold uppercase tracking-[0.22em] text-night">
+      <div className="top-announcement-bar px-5 py-2 text-center font-bold uppercase">
         Reservá tu experiencia premium en Rondeau 3352, CABA
       </div>
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-5 md:px-8">
