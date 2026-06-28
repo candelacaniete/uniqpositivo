@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { services } from '../data/services.js';
-import { createReservation, getBookedTimes, getReservationStorageMode } from '../lib/reservations.js';
+import { serviceCategories, services } from '../data/services.js';
+import { createReservation, getBookedTimes } from '../lib/reservations.js';
 import { defaultBusinessSettings, getBusinessSettings, isWorkingDay } from '../lib/settings.js';
 
 function getToday() {
@@ -19,6 +19,7 @@ const cardVariants = {
 
 export default function Servicios() {
   const [selectedService, setSelectedService] = useState(services[0]);
+  const [activeCategory, setActiveCategory] = useState('Todos');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [clientName, setClientName] = useState('');
@@ -40,7 +41,10 @@ export default function Servicios() {
   }, [clientName, date, selectedService, settings.depositAlias, time]);
 
   const SelectedIcon = selectedService.Icon;
-  const storageMode = getReservationStorageMode();
+  const filteredServices = useMemo(
+    () => (activeCategory === 'Todos' ? services : services.filter((service) => service.category === activeCategory)),
+    [activeCategory],
+  );
 
   useEffect(() => {
     let ignore = false;
@@ -119,16 +123,40 @@ export default function Servicios() {
           <p className="mx-auto mt-6 max-w-2xl leading-8 text-ash">
             Cada combo abre una ficha de reserva con disponibilidad, datos de contacto, estado de seña y control interno de turnos.
           </p>
-          {storageMode === 'demo' ? (
-            <p className="mt-4 max-w-2xl rounded-2xl border border-line bg-night/80 px-4 py-3 text-sm leading-6 text-ash">
-              Modo demo: las reservas se guardan en este navegador. Configurá Supabase para persistencia real compartida.
-            </p>
-          ) : null}
         </motion.div>
 
         <div className="services-booking-grid">
           <div className="grid gap-4">
-          {services.map(({ name, description, price, Icon }, index) => (
+            <div className="mb-2 flex flex-wrap justify-center gap-2 lg:justify-start">
+              {serviceCategories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className={`border px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+                    activeCategory === category
+                      ? 'border-cream bg-cream text-night'
+                      : 'border-line bg-transparent text-ash hover:border-cream hover:text-cream'
+                  }`}
+                  onClick={() => {
+                    setActiveCategory(category);
+                    const nextServices = category === 'Todos' ? services : services.filter((service) => service.category === category);
+                    if (!nextServices.some((service) => service.id === selectedService.id)) {
+                      setSelectedService(nextServices[0] || services[0]);
+                      setTime('');
+                      setReservation(null);
+                      setFormMessage('');
+                    }
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+          {filteredServices.map((service, index) => {
+            const { name, description, price, Icon } = service;
+
+            return (
             <motion.article
               key={name}
               className={`cursor-pointer border p-5 transition md:p-6 ${
@@ -140,7 +168,7 @@ export default function Servicios() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.25 }}
               onClick={() => {
-                setSelectedService(services[index]);
+                setSelectedService(service);
                 setTime('');
                 setReservation(null);
                 setFormMessage('');
@@ -155,19 +183,25 @@ export default function Servicios() {
                     <p className="mt-2 line-clamp-2 text-sm leading-6 text-ash">{description}</p>
                     <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-widest text-cream">
                       <span>{price}</span>
-                      {services[index].deposit ? (
+                      {service.priceBadge ? (
+                        <>
+                          <span className="border border-line px-2 py-1 text-[0.62rem] text-ash">{service.priceBadge}</span>
+                        </>
+                      ) : null}
+                      {service.deposit ? (
                         <>
                           <span className="text-ash">·</span>
-                          <span>Seña {services[index].deposit}</span>
+                          <span>Seña {service.deposit}</span>
                         </>
                       ) : null}
                       <span className="text-ash">·</span>
-                      <span>{services[index].duration}</span>
+                      <span>{service.duration}</span>
                     </div>
                   </div>
                 </div>
             </motion.article>
-          ))}
+            );
+          })}
           </div>
 
           <motion.form
@@ -194,6 +228,11 @@ export default function Servicios() {
               <div className="rounded-3xl border border-line bg-ink/70 p-4">
                 <p className="text-xs uppercase tracking-widest text-ash">Valor</p>
                 <p className="mt-2 font-serif text-2xl font-semibold text-cream">{selectedService.price}</p>
+                {selectedService.priceBadge ? (
+                  <p className="mt-3 inline-flex border border-line px-2 py-1 text-xs font-bold uppercase tracking-widest text-ash">
+                    {selectedService.priceBadge}
+                  </p>
+                ) : null}
               </div>
               <div className="rounded-3xl border border-line bg-ink/70 p-4">
                 <p className="text-xs uppercase tracking-widest text-ash">Duración aprox.</p>
