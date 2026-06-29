@@ -24,6 +24,8 @@ export default function Servicios() {
   const [time, setTime] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
+  const [clientEmail, setClientEmail] = useState('');
+  const [clientDni, setClientDni] = useState('');
   const [clientInstagram, setClientInstagram] = useState('');
   const [bookedTimes, setBookedTimes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,13 +34,13 @@ export default function Servicios() {
   const [settings, setSettings] = useState(defaultBusinessSettings);
 
   const selectedDateIsWorkingDay = isWorkingDay(date, settings.workingDays);
-  const isComplete = Boolean(selectedService && date && time && clientName && clientPhone && selectedDateIsWorkingDay);
+  const isComplete = Boolean(selectedService && date && time && clientName && clientPhone && clientEmail && clientDni && selectedDateIsWorkingDay);
   const whatsappHref = useMemo(() => {
     const depositText = selectedService.deposit ? ` Seña: ${selectedService.deposit}.` : '';
     const aliasText = selectedService.depositAmount ? ` Alias para seña: ${settings.depositAlias}.` : '';
-    const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText}${aliasText} Duración aproximada: ${selectedService.duration}. Mi nombre es ${clientName}.`;
+    const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText}${aliasText} Duración aproximada: ${selectedService.duration}. Mis datos: ${clientName}, teléfono ${clientPhone}, mail ${clientEmail}, DNI ${clientDni}.`;
     return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
-  }, [clientName, date, selectedService, settings.depositAlias, time]);
+  }, [clientDni, clientEmail, clientName, clientPhone, date, selectedService, settings.depositAlias, time]);
 
   const SelectedIcon = selectedService.Icon;
   const filteredServices = useMemo(
@@ -91,6 +93,8 @@ export default function Servicios() {
         time,
         clientName,
         clientPhone,
+        clientEmail,
+        clientDni,
         clientInstagram,
       });
 
@@ -110,6 +114,7 @@ export default function Servicios() {
 
   return (
     <section id="servicios" className="section-shell bg-night px-5 py-24 md:px-8">
+      <img src="/brand/tulipan.png" alt="" className="tulip-mark tulip-mark-section" aria-hidden="true" />
       <div className="mx-auto max-w-6xl">
         <motion.div
           className="mb-12 text-center"
@@ -119,7 +124,7 @@ export default function Servicios() {
           transition={{ duration: 0.6 }}
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Servicios</p>
-          <h2 className="editorial-section-title">Elegí tu combo y reservá</h2>
+          <h2 className="editorial-section-title">Reservá tu turno</h2>
           <p className="mx-auto mt-6 max-w-2xl leading-8 text-ash">
             Cada combo abre una ficha de reserva con disponibilidad, datos de contacto, estado de seña y control interno de turnos.
           </p>
@@ -180,7 +185,7 @@ export default function Servicios() {
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-serif text-3xl font-semibold text-cream">{name}</h3>
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-ash">{description}</p>
+                    <p className="mt-2 text-sm leading-6 text-ash">{description}</p>
                     <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-widest text-cream">
                       <span>{price}</span>
                       {service.priceBadge ? (
@@ -287,6 +292,25 @@ export default function Servicios() {
                   value={clientPhone}
                   onChange={(event) => setClientPhone(event.target.value)}
                   placeholder="+54 11..."
+                />
+              </label>
+              <label className="block">
+                <span className="mb-3 block text-sm font-semibold text-cream">Mail</span>
+                <input
+                  type="email"
+                  className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 text-cream outline-none transition focus:border-moss"
+                  value={clientEmail}
+                  onChange={(event) => setClientEmail(event.target.value)}
+                  placeholder="tu@mail.com"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-3 block text-sm font-semibold text-cream">DNI</span>
+                <input
+                  className="w-full rounded-2xl border border-line bg-ink/80 px-4 py-4 text-cream outline-none transition focus:border-moss"
+                  value={clientDni}
+                  onChange={(event) => setClientDni(event.target.value)}
+                  placeholder="DNI"
                 />
               </label>
               <label className="block sm:col-span-2">

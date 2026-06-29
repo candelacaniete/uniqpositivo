@@ -20,6 +20,8 @@ create table if not exists public.reservations (
   service_deposit_label text,
   client_name text not null,
   client_phone text not null,
+  client_email text not null default '',
+  client_dni text not null default '',
   client_instagram text,
   reservation_date date not null,
   reservation_time text not null,

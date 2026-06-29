@@ -18,8 +18,9 @@ export default function Navbar() {
         Reservá tu experiencia premium en Rondeau 3352, CABA
       </div>
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-5 md:px-8">
-        <a href="#hero" className="shrink-0 font-script text-4xl leading-none text-cream md:text-5xl" aria-label="Ir al inicio">
-          Uniq Positivo
+        <a href="#hero" className="flex shrink-0 items-center gap-2 font-script text-4xl leading-none text-cream md:text-5xl" aria-label="Ir al inicio">
+          <img src="/brand/tulipan.png" alt="" className="h-8 w-auto opacity-80" />
+          <span>Uniq Positivo</span>
         </a>
 
         <div className="hidden flex-1 items-center justify-center gap-6 md:flex">

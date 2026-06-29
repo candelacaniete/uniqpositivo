@@ -370,6 +370,8 @@ export default function AdminTurnos() {
                         <p className="font-semibold text-cream">{reservation.clientName}</p>
                         <p className="mt-1 text-xs text-ash">
                           {reservation.clientPhone}
+                          {reservation.clientEmail ? ` · ${reservation.clientEmail}` : ''}
+                          {reservation.clientDni ? ` · DNI ${reservation.clientDni}` : ''}
                           {reservation.clientInstagram ? ` · ${reservation.clientInstagram}` : ''}
                         </p>
                       </td>
@@ -429,6 +431,8 @@ export default function AdminTurnos() {
                           <h2 className="mt-2 font-serif text-3xl font-semibold">{reservation.serviceName}</h2>
                           <p className="mt-2 text-sm leading-6 text-ash">
                             {reservation.clientName} · {reservation.clientPhone}
+                            {reservation.clientEmail ? ` · ${reservation.clientEmail}` : ''}
+                            {reservation.clientDni ? ` · DNI ${reservation.clientDni}` : ''}
                             {reservation.clientInstagram ? ` · ${reservation.clientInstagram}` : ''}
                           </p>
                           <p className="mt-2 text-sm leading-6 text-ash">

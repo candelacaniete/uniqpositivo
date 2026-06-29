@@ -95,6 +95,27 @@ select {
   letter-spacing: 0.18em;
 }
 
+.tulip-mark {
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+  height: auto;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+}
+
+.tulip-mark-hero {
+  right: 4vw;
+  bottom: 2rem;
+  width: min(28vw, 18rem);
+}
+
+.tulip-mark-section {
+  left: -3rem;
+  top: 3rem;
+  width: min(34vw, 16rem);
+}
+
 .section-shell {
   position: relative;
   overflow: hidden;
@@ -190,6 +211,8 @@ select {
 }
 
 .editorial-hero {
+  position: relative;
+  overflow: hidden;
   padding-top: 7.55rem;
   border-bottom: 1px solid var(--color-line);
 }

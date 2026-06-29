@@ -15,7 +15,7 @@ export default function Galeria() {
           <h2 className="font-serif text-5xl font-semibold leading-none text-night md:text-7xl">
             Uniq nació como un refugio para transformar imagen y energía.
           </h2>
-          <p className="mx-auto mt-8 max-w-xl text-base leading-8 text-night/75">
+          <p className="mx-auto mt-8 max-w-xl text-base leading-8 text-night">
             Un lugar donde la belleza se convierte en experiencia artística y donde cada detalle, desde el color, las texturas, la
             música y las obras que nos rodean, invitan a conectar con lo más auténtico de uno mismo.
           </p>
@@ -28,12 +28,12 @@ export default function Galeria() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.75, delay: 0.1 }}
         >
-          <p className="leading-8 text-ash">
+          <p className="leading-8 text-cream">
             En Rondeau 3352 conviven el oficio del cabello, la sensibilidad del arte y una mirada estética que no separa belleza
             de expresión. La galería abre otra capa del espacio: obras, texturas y recorridos que acompañan la experiencia de
             quienes llegan a Uniq.
           </p>
-          <p className="mt-5 leading-8 text-ash">
+          <p className="mt-5 leading-8 text-cream">
             Hoy somos un centro de estética que late dentro de una galería de arte, dónde la creatividad y el cuidado se entrelazan
             para recordarnos que transformarse también es un acto de amor propio, de superación y de arte.
           </p>

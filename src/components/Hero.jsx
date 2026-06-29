@@ -5,6 +5,7 @@ const heroImageUrl = '/hero/herouniq.png';
 export default function Hero({ onGalleryClick }) {
   return (
     <section id="hero" className="editorial-hero bg-ink">
+      <img src="/brand/tulipan.png" alt="" className="tulip-mark tulip-mark-hero" aria-hidden="true" />
       <div className="editorial-hero-grid">
         <motion.div
           className="editorial-hero-image"

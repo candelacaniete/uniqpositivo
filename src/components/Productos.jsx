@@ -6,6 +6,8 @@ const products = [
   { name: 'Óleo finalizador', description: 'Control de frizz con acabado luminoso.' },
 ];
 
+const brands = ["L'Oréal Professionnel", 'Kleno', 'Hairssimme', 'Fidelité', 'Caviar', 'Ossono', 'y otras'];
+
 function productWhatsappLink(productName) {
   const text = `Hola! Quiero consultar por el producto ${productName}`;
   return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
@@ -24,6 +26,20 @@ export default function Productos() {
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Productos</p>
           <h2 className="editorial-section-title">Rituales para continuar en casa</h2>
+          <p className="mx-auto mt-6 max-w-3xl leading-8 text-ash">
+            Todos los productos que vendemos son seleccionados y probados en distintas personas con resultados favorables. Si los
+            ofrecemos es porque realmente confiamos en ellos, no porque estén de moda.
+          </p>
+          <div className="mx-auto mt-6 flex max-w-4xl flex-wrap justify-center gap-2">
+            {brands.map((brand) => (
+              <span key={brand} className="border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest text-ash">
+                {brand}
+              </span>
+            ))}
+          </div>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-ash">
+            Te invitamos a visitar el local para conocer la selección completa y elegir el ritual ideal para tu cabello.
+          </p>
         </motion.div>
 
         <div className="grid gap-5 md:grid-cols-3">

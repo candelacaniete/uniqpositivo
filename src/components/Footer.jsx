@@ -15,17 +15,16 @@ export default function Footer() {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           <div>
-            <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Dirección</p>
-            <p>Rondeau 3352, CABA</p>
+            <p className="font-serif text-2xl font-semibold text-cream">Rondeau 3352, CABA</p>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">Dirección</p>
           </div>
           <div>
-            <p className="mb-2 font-semibold uppercase tracking-widest text-cream">WhatsApp</p>
             <a className="transition hover:text-cream" href="https://wa.me/541144045167" target="_blank" rel="noreferrer">
               +54 11 4404 5167
             </a>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">WhatsApp</p>
           </div>
           <div>
-            <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Instagram</p>
             <a
               className="transition hover:text-cream"
               href="https://www.instagram.com/uniqpositivo"
@@ -34,16 +33,17 @@ export default function Footer() {
             >
               @uniqpositivo
             </a>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">Instagram</p>
           </div>
           <div>
-            <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Horarios</p>
-            <p>Mar a sáb · 10:00 a 19:00</p>
+            <p className="font-serif text-2xl font-semibold text-cream">Mar a sáb · 10:00 a 19:00</p>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">Horarios</p>
           </div>
           <div>
-            <p className="mb-2 font-semibold uppercase tracking-widest text-cream">Interno</p>
             <a className="transition hover:text-cream" href="/admin-turnos">
               Acceso admin
             </a>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">Interno</p>
           </div>
         </div>
       </div>
