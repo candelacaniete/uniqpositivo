@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { Menu, UserRound, X } from 'lucide-react';
 
 const navLinks = [
-  { label: 'Servicios', href: '#servicios' },
-  { label: 'Turnos', href: '#servicios' },
+  { label: 'Reservar', href: '#servicios' },
   { label: 'Galería', href: '#galeria-puente', special: true },
-  { label: 'Productos', href: '#productos' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Shop', href: '#productos' },
 ];
 
 export default function Navbar() {

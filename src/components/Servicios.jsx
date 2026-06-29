@@ -123,10 +123,10 @@ export default function Servicios() {
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Servicios</p>
+          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Peluquería</p>
           <h2 className="editorial-section-title">Reservá tu turno</h2>
           <p className="mx-auto mt-6 max-w-2xl leading-8 text-ash">
-            Cada combo abre una ficha de reserva con disponibilidad, datos de contacto, estado de seña y control interno de turnos.
+            Elegí entre color, cortes y combos. Cada servicio abre su ficha con descripción, valor, duración, disponibilidad y datos para confirmar la reserva.
           </p>
         </motion.div>
 
