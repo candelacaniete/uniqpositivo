@@ -4,14 +4,17 @@ import Servicios from './components/Servicios.jsx';
 import Resenas from './components/Resenas.jsx';
 import Galeria from './components/Galeria.jsx';
 import Productos from './components/Productos.jsx';
+import UniversoTeaser from './components/UniversoTeaser.jsx';
 import Footer from './components/Footer.jsx';
 import GaleriaExperiencia from './components/GaleriaExperiencia.jsx';
 import AdminTurnos from './components/AdminTurnos.jsx';
+import Universo from './components/Universo.jsx';
 
 export default function App() {
   const normalizedPath = window.location.pathname.replace(/\/$/, '') || '/';
   const isGalleryPage = normalizedPath === '/galeria';
   const isAdminPage = normalizedPath === '/admin-turnos';
+  const isUniversoPage = normalizedPath === '/universo';
 
   const handleHeroGalleryClick = () => {
     document.getElementById('galeria-puente')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -25,6 +28,10 @@ export default function App() {
     return <AdminTurnos />;
   }
 
+  if (isUniversoPage) {
+    return <Universo />;
+  }
+
   return (
     <div className="min-h-screen bg-ink text-cream">
       <Navbar />
@@ -34,6 +41,7 @@ export default function App() {
         <Resenas />
         <Galeria />
         <Productos />
+        <UniversoTeaser />
       </main>
       <Footer />
     </div>

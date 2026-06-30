@@ -5,17 +5,17 @@ export default function Galeria() {
     <section id="galeria-puente" className="section-shell bg-ink px-5 py-24 md:px-8">
       <div className="mx-auto grid max-w-6xl items-stretch overflow-hidden border border-line lg:grid-cols-2">
         <motion.div
-          className="flex flex-col justify-center bg-warm p-8 text-center md:p-12"
+          className="gallery-history-panel flex flex-col justify-center p-8 text-center md:p-12"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.75 }}
         >
-          <p className="mb-5 text-sm uppercase tracking-widest text-night/70">Historia + galería</p>
-          <h2 className="font-serif text-5xl font-semibold leading-none text-night md:text-7xl">
+          <p className="mb-5 text-sm uppercase tracking-widest">Historia + galería</p>
+          <h2 className="font-serif text-5xl font-semibold leading-none md:text-7xl">
             Uniq nació como un refugio para transformar imagen y energía.
           </h2>
-          <p className="mx-auto mt-8 max-w-xl text-base leading-8 text-night">
+          <p className="mx-auto mt-8 max-w-xl text-base leading-8">
             Un lugar donde la belleza se convierte en experiencia artística y donde cada detalle, desde el color, las texturas, la
             música y las obras que nos rodean, invitan a conectar con lo más auténtico de uno mismo.
           </p>

@@ -17,9 +17,12 @@ const cardVariants = {
   }),
 };
 
+const SERVICES_PER_PAGE = 5;
+
 export default function Servicios() {
   const [selectedService, setSelectedService] = useState(services[0]);
   const [activeCategory, setActiveCategory] = useState('Todos');
+  const [servicesPage, setServicesPage] = useState(0);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [clientName, setClientName] = useState('');
@@ -47,6 +50,20 @@ export default function Servicios() {
     () => (activeCategory === 'Todos' ? services : services.filter((service) => service.category === activeCategory)),
     [activeCategory],
   );
+  const shouldPaginateServices = activeCategory === 'Todos' && filteredServices.length > SERVICES_PER_PAGE;
+  const servicesPageCount = Math.ceil(filteredServices.length / SERVICES_PER_PAGE);
+  const visibleServices = shouldPaginateServices
+    ? filteredServices.slice(servicesPage * SERVICES_PER_PAGE, servicesPage * SERVICES_PER_PAGE + SERVICES_PER_PAGE)
+    : filteredServices;
+
+  const handleServicePageChange = (pageIndex) => {
+    setServicesPage(pageIndex);
+    const nextService = filteredServices[pageIndex * SERVICES_PER_PAGE] || filteredServices[0] || services[0];
+    setSelectedService(nextService);
+    setTime('');
+    setReservation(null);
+    setFormMessage('');
+  };
 
   useEffect(() => {
     let ignore = false;
@@ -144,8 +161,11 @@ export default function Servicios() {
                   }`}
                   onClick={() => {
                     setActiveCategory(category);
+                    setServicesPage(0);
                     const nextServices = category === 'Todos' ? services : services.filter((service) => service.category === category);
-                    if (!nextServices.some((service) => service.id === selectedService.id)) {
+                    const nextVisibleServices =
+                      category === 'Todos' ? nextServices.slice(0, SERVICES_PER_PAGE) : nextServices;
+                    if (!nextVisibleServices.some((service) => service.id === selectedService.id)) {
                       setSelectedService(nextServices[0] || services[0]);
                       setTime('');
                       setReservation(null);
@@ -158,7 +178,7 @@ export default function Servicios() {
               ))}
             </div>
 
-          {filteredServices.map((service, index) => {
+          {visibleServices.map((service, index) => {
             const { name, description, price, Icon } = service;
 
             return (
@@ -207,6 +227,24 @@ export default function Servicios() {
             </motion.article>
             );
           })}
+            {shouldPaginateServices ? (
+              <div className="mt-2 flex items-center justify-center gap-2 lg:justify-start">
+                {Array.from({ length: servicesPageCount }).map((_, pageIndex) => (
+                  <button
+                    key={pageIndex}
+                    type="button"
+                    className={`border px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+                      servicesPage === pageIndex
+                        ? 'border-cream bg-cream text-night'
+                        : 'border-line bg-transparent text-ash hover:border-cream hover:text-cream'
+                    }`}
+                    onClick={() => handleServicePageChange(pageIndex)}
+                  >
+                    {pageIndex + 1}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <motion.form

@@ -95,6 +95,15 @@ select {
   letter-spacing: 0.18em;
 }
 
+.gallery-history-panel {
+  background: #7A6250;
+  color: #F8F1E7;
+}
+
+.gallery-history-panel p {
+  color: rgba(248, 241, 231, 0.86);
+}
+
 .tulip-mark {
   pointer-events: none;
   position: absolute;
