@@ -649,6 +649,102 @@ select {
   color: rgba(244, 231, 210, 0.7);
 }
 
+.catalogue-section {
+  padding: 8rem 1.25rem 10rem;
+  background: #241913;
+  color: #F4E7D2;
+}
+
+.catalogue-heading {
+  max-width: 58rem;
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+
+.catalogue-heading p {
+  color: rgba(244, 231, 210, 0.62);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.catalogue-heading h2 {
+  margin-top: 1rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(3.8rem, 9vw, 8rem);
+  font-weight: 600;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.catalogue-heading span {
+  display: block;
+  max-width: 40rem;
+  margin: 1.5rem auto 0;
+  color: rgba(244, 231, 210, 0.68);
+  line-height: 1.8;
+}
+
+.catalogue-grid {
+  display: grid;
+  max-width: 1180px;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+}
+
+.catalogue-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border: 1px solid rgba(244, 231, 210, 0.16);
+  background: rgba(244, 231, 210, 0.045);
+}
+
+.catalogue-image-button {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #0f0b09;
+  cursor: zoom-in;
+}
+
+.catalogue-image-button .story-artwork-image,
+.catalogue-image-button .story-artwork-blur {
+  aspect-ratio: 4 / 5;
+}
+
+.catalogue-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem;
+}
+
+.catalogue-copy h2 {
+  margin-top: 0.8rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.catalogue-copy p:not(.story-kicker) {
+  margin-top: 0.7rem;
+  color: rgba(244, 231, 210, 0.7);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.catalogue-copy .story-actions {
+  margin-top: auto;
+  padding-top: 1.3rem;
+}
+
 @media (min-width: 768px) {
   .masonry {
     column-count: 2;
