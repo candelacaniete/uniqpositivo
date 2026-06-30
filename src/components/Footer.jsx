@@ -1,14 +1,12 @@
-import UniqLogo from './UniqLogo.jsx';
-
 export default function Footer() {
   return (
     <footer id="contacto" className="bg-night px-5 py-10 text-sm text-ash md:px-8">
       <div className="mx-auto mb-8 h-px max-w-6xl bg-accent" />
       <div className="footer-grid mx-auto max-w-6xl">
         <div>
-          <div className="mb-4 flex items-center gap-3">
-            <UniqLogo compact className="h-12 w-12" />
-            <span className="font-serif text-2xl font-bold text-cream">Uniq Positivo</span>
+          <div className="mb-4 flex items-center gap-2">
+            <img src="/brand/tulipan.png" alt="" className="h-8 w-auto opacity-80" />
+            <span className="font-script text-4xl leading-none text-cream">Uniq Positivo</span>
           </div>
           <p>Centro de belleza y galería de arte.</p>
         </div>

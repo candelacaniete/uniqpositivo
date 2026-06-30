@@ -754,6 +754,19 @@ select {
   padding-top: 1.3rem;
 }
 
+.catalogue-copy .story-info-button {
+  border-color: rgba(244, 231, 210, 0.58);
+  background: rgba(244, 231, 210, 0.08);
+  color: #F4E7D2;
+}
+
+.catalogue-copy .story-info-button:hover,
+.catalogue-copy .story-info-button:focus-visible {
+  border-color: #F4E7D2;
+  background: #F4E7D2;
+  color: #241913;
+}
+
 @media (min-width: 768px) {
   .masonry {
     column-count: 2;

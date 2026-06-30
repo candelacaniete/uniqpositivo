@@ -67,8 +67,11 @@ export default function Resenas() {
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Reseñas</p>
+          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Referencias</p>
           <h2 className="editorial-section-title">Lo que dicen nuestras clientas</h2>
+          <p className="mx-auto mt-6 inline-flex border border-line bg-night px-4 py-2 text-xs font-bold uppercase tracking-widest text-ash">
+            referencia de Google · ★★★★★
+          </p>
         </motion.div>
 
         <div
@@ -87,7 +90,9 @@ export default function Resenas() {
                     </div>
                     <div>
                       <h3 className="font-serif text-xl text-cream">{review.name}</h3>
-                      <p className="accent-text text-sm tracking-widest">★★★★★</p>
+                      <p className="mt-1 inline-flex border border-line px-2 py-1 text-[0.62rem] font-bold uppercase tracking-widest text-ash">
+                        referencia de Google · ★★★★★
+                      </p>
                     </div>
                   </div>
                   <p className="leading-8 text-ash">“{review.text}”</p>
