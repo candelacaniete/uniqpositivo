@@ -46,7 +46,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="mx-auto mt-10 max-w-6xl border-t border-line pt-5 text-center text-xs uppercase tracking-widest text-ash md:text-right">
-        <a className="transition hover:text-cream" href="https://www.katem.com.ar" target="_blank" rel="noreferrer">
+        <a className="transition hover:text-cream" href="https://katem.com.ar/" target="_blank" rel="noreferrer">
           Created by Katem Studio
         </a>
       </div>
