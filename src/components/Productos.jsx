@@ -15,9 +15,6 @@ export default function Productos() {
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Shop · Próximamente</p>
           <h2 className="editorial-section-title">Rituales para continuar en casa</h2>
-          <p className="mx-auto mt-6 inline-flex border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest text-ash">
-            Próximamente
-          </p>
           <p className="mx-auto mt-6 max-w-3xl leading-8 text-ash">
             Todos los productos que vendemos son seleccionados y probados en distintas personas con resultados favorables. Si los
             ofrecemos es porque realmente confiamos en ellos, no porque estén de moda.
