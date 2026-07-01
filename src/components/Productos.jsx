@@ -69,6 +69,21 @@ export default function Productos() {
             </motion.article>
           ))}
         </div>
+
+        <motion.div
+          className="mt-10 border border-line bg-ink p-6 text-center md:p-8"
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.55 }}
+        >
+          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Próximamente</p>
+          <h3 className="font-serif text-4xl font-semibold leading-none text-cream md:text-5xl">Universo Uniq</h3>
+          <p className="mx-auto mt-5 max-w-2xl leading-8 text-ash">
+            Una selección de marcas, objetos, indumentaria, proyectos invitados, colaboraciones y acciones vinculadas al compromiso
+            de Uniq con la ayuda a los animales.
+          </p>
+        </motion.div>
       </div>
     </section>
   );

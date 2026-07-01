@@ -427,21 +427,6 @@ select {
   line-height: 1.9;
 }
 
-.story-timeline {
-  position: relative;
-  padding-bottom: 20vh;
-}
-
-.story-timeline::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(36, 25, 19, 0.22), rgba(232, 211, 182, 0.24), transparent);
-}
-
 .story-moment {
   min-height: 115svh;
   display: grid;
@@ -678,6 +663,7 @@ select {
   text-transform: uppercase;
 }
 
+.catalogue-heading h1,
 .catalogue-heading h2 {
   margin-top: 1rem;
   font-family: "Cormorant Garamond", Georgia, serif;
@@ -798,10 +784,6 @@ select {
   .story-intro {
     min-height: 88svh;
     padding-top: 6rem;
-  }
-
-  .story-timeline::before {
-    left: 1.25rem;
   }
 
   .story-moment,

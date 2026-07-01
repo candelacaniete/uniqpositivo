@@ -141,7 +141,7 @@ export default function Servicios() {
           transition={{ duration: 0.6 }}
         >
           <p className="mb-4 text-sm uppercase tracking-widest text-ash">Peluquería</p>
-          <h2 className="editorial-section-title">Reservá tu turno</h2>
+          <h2 className="editorial-section-title">Reservar turno en peluquería</h2>
           <p className="mx-auto mt-6 max-w-2xl leading-8 text-ash">
             Elegí entre color, cortes y combos. Cada servicio abre su ficha con descripción, valor, duración, disponibilidad y datos para confirmar la reserva.
           </p>

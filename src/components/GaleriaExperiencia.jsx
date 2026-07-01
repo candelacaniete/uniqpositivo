@@ -9,7 +9,7 @@ const artworks = [
     year: '2023',
     size: '60 x 70',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Retrato y oficio',
     image: '/artworks/la-pintora.png',
     palette: ['#C94B36', '#F2C414', '#1D5F9E'],
@@ -23,7 +23,7 @@ const artworks = [
     year: '2023',
     size: '50 x 70',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Silencio azul',
     image: '/artworks/la-chica-de-azul.png',
     palette: ['#446B7B', '#C79237', '#E5C27C'],
@@ -37,7 +37,7 @@ const artworks = [
     year: '2023',
     size: '60 x 70',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '200 USD',
     theme: 'Oficio y creación',
     image: '/artworks/drive/la-artista-jime.png',
     palette: ['#7E3C2E', '#E4A13C', '#20251F'],
@@ -51,7 +51,7 @@ const artworks = [
     year: '2023',
     size: '100 x 80',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '250 USD',
     theme: 'Materia sensible',
     image: '/artworks/drive/sentir-jime.png',
     palette: ['#4D4B41', '#C77D59', '#D8C6AF'],
@@ -65,7 +65,7 @@ const artworks = [
     year: '2023',
     size: '45 x 60',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Camino interior',
     image: '/artworks/drive/la-busqueda-jime.png',
     palette: ['#C56E3D', '#214D5A', '#E4C49E'],
@@ -93,7 +93,7 @@ const artworks = [
     year: '2023',
     size: '30 x 40',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Introspección',
     image: '/artworks/drive/interior-jime.png',
     palette: ['#6E4A3B', '#3D6671', '#DDB887'],
@@ -107,7 +107,7 @@ const artworks = [
     year: '2023',
     size: '45 x 70',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '250 USD',
     theme: 'Renacer',
     image: '/artworks/drive/florecimiento-jime.png',
     palette: ['#3F5A46', '#D78353', '#E7C8B2'],
@@ -121,7 +121,7 @@ const artworks = [
     year: '2023',
     size: '30 x 40',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '100 USD',
     theme: 'Flujo',
     image: '/artworks/drive/agua-jime.png',
     palette: ['#294B60', '#7FA3A6', '#D6A766'],
@@ -135,7 +135,7 @@ const artworks = [
     year: '2023',
     size: '30 x 40',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '100 USD',
     theme: 'Tiempo y gesto',
     image: '/artworks/drive/rimel-jime.jpg',
     palette: ['#3A2C26', '#A16B4C', '#D4B78E'],
@@ -149,7 +149,7 @@ const artworks = [
     year: '2023',
     size: '30 x 40',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '100 USD',
     theme: 'Susurro lunar',
     image: '/artworks/drive/selenografia-jime.jpg',
     palette: ['#30364A', '#C7A06B', '#E4D2B6'],
@@ -163,7 +163,7 @@ const artworks = [
     year: '2023',
     size: '80 x 100',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Encuentro',
     image: '/artworks/drive/la-cofradia.jpg',
     palette: ['#4A3026', '#C68E4C', '#D9C6A2'],
@@ -177,7 +177,7 @@ const artworks = [
     year: '2023',
     size: '80 x 100',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '200 USD',
     theme: 'Sueño y espacio',
     image: '/artworks/drive/estancia-jime.jpg',
     palette: ['#2A241D', '#8F6E55', '#D8C1A2'],
@@ -191,7 +191,7 @@ const artworks = [
     year: '2023',
     size: '80 x 100',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '200 USD',
     theme: 'Cuerpo colectivo',
     image: '/artworks/drive/caida-jime.jpg',
     palette: ['#56362F', '#A66A4D', '#D6B58E'],
@@ -205,7 +205,7 @@ const artworks = [
     year: '2023',
     size: '80 x 100',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '1000 USD',
     theme: 'Movimiento sensorial',
     image: '/artworks/drive/coreografia-jime.jpg',
     palette: ['#2D2B23', '#B46A3C', '#DEC192'],
@@ -219,7 +219,7 @@ const artworks = [
     year: '2023',
     size: '45 x 60',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Memoria',
     image: '/artworks/drive/memoria-jime.png',
     palette: ['#273A35', '#D27A5F', '#E4C5A4'],
@@ -233,7 +233,7 @@ const artworks = [
     year: '2023',
     size: '45 x 60',
     technique: 'Óleo sobre tela',
-    price: 'Consultar',
+    price: '150 USD',
     theme: 'Perfil y contraste',
     image: '/artworks/titulo-en-contraste.png',
     palette: ['#213F3A', '#E77E20', '#E7C9C1'],
@@ -241,8 +241,6 @@ const artworks = [
       'Un perfil de presencia serena, atravesado por planos cromáticos que construyen contraste, silencio y fuerza visual.',
   },
 ];
-
-const featuredArtworks = artworks.slice(0, 3);
 
 function svgDataUri(markup) {
   return `data:image/svg+xml;utf8,${encodeURIComponent(markup)}`;
@@ -311,69 +309,6 @@ function BlurUpArtwork({ artwork, onZoom }) {
       />
       <span className="story-zoom-hint">Tap para ver textura</span>
     </button>
-  );
-}
-
-function ArtworkMoment({ artwork, index, onZoom }) {
-  const [expanded, setExpanded] = useState(false);
-  const artworkDetails = [artwork.size, artwork.technique, artwork.price].filter(Boolean).join(' · ');
-
-  return (
-    <motion.section
-      className="story-moment"
-      initial={{ opacity: 0.2 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ amount: 0.55 }}
-      transition={{ duration: 0.9, ease: 'easeOut' }}
-    >
-      <motion.div
-        className="story-artwork-wrap"
-        initial={{ opacity: 0, y: 48, scale: 0.96 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ amount: 0.45 }}
-        transition={{ duration: 0.9, ease: 'easeOut' }}
-      >
-        <BlurUpArtwork artwork={artwork} onZoom={onZoom} />
-      </motion.div>
-
-      <motion.aside
-        className="story-copy"
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ amount: 0.5 }}
-        transition={{ duration: 0.75, delay: 0.08 }}
-      >
-        <p className="story-kicker">
-          {String(index + 1).padStart(2, '0')} · {artwork.theme}
-        </p>
-        <h2>{artwork.title}</h2>
-        <p className="story-meta">
-          {artwork.artist} · {artwork.year}
-        </p>
-        {artworkDetails ? <p className="story-meta">{artworkDetails}</p> : null}
-        <div className="story-actions">
-          <button type="button" className="story-info-button" onClick={() => setExpanded((current) => !current)}>
-            {expanded ? 'Cerrar info' : '+ info'}
-          </button>
-          <a className="story-info-button" href={artworkWhatsappLink(artwork)} target="_blank" rel="noreferrer">
-            Consultar por esta obra
-          </a>
-        </div>
-        <AnimatePresence initial={false}>
-          {expanded ? (
-            <motion.p
-              className="story-context"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.28 }}
-            >
-              {artwork.context}
-            </motion.p>
-          ) : null}
-        </AnimatePresence>
-      </motion.aside>
-    </motion.section>
   );
 }
 
@@ -474,31 +409,11 @@ export default function GaleriaExperiencia() {
         </a>
       </div>
 
-      <section className="story-intro">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75 }}
-        >
-          <p>Galería Uniq Positivo</p>
-          <h1>Recorrido curado.</h1>
-          <span>
-            Una obra por momento, catálogo completo para consultar disponibilidad y zoom de detalle para observar textura y materia.
-          </span>
-        </motion.div>
-      </section>
-
-      <div className="story-timeline" aria-label="Recorrido de obras">
-        {featuredArtworks.map((artwork, index) => (
-          <ArtworkMoment key={artwork.id} artwork={artwork} index={index} onZoom={setZoomedArtwork} />
-        ))}
-      </div>
-
       <section className="catalogue-section" aria-label="Catálogo completo de obras">
         <div className="catalogue-heading">
-          <p>Catálogo vendible</p>
-          <h2>Todas las obras</h2>
-          <span>Consultá por WhatsApp la disponibilidad, precio final y coordinación de compra de cada pieza.</span>
+          <p>Galería Uniq Positivo</p>
+          <h1>Todas las obras</h1>
+          <span>Consultá por WhatsApp la disponibilidad y coordinación de compra de cada pieza.</span>
         </div>
         <div className="catalogue-grid">
           {artworks.map((artwork) => (
