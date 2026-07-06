@@ -288,6 +288,7 @@ select {
 
 .editorial-actions {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   gap: 0.9rem;
   justify-content: center;
@@ -298,14 +299,17 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  max-width: 100%;
   border: 1px solid currentColor;
   border-radius: 0.7rem;
-  padding: 0.95rem 2.4rem;
+  padding: 0.95rem 1.65rem;
   background: transparent;
   color: var(--color-cream);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.22em;
+  line-height: 1.25;
+  text-align: center;
   text-transform: uppercase;
   transition:
     background 220ms ease,

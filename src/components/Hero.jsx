@@ -30,7 +30,7 @@ export default function Hero({ onGalleryClick }) {
           <p className="editorial-script">the Art of Hair</p>
           <div className="editorial-actions">
             <a href="#servicios" className="editorial-button">
-              Reservar turno
+              Reservar turno en peluquería
             </a>
             <button type="button" onClick={onGalleryClick} className="editorial-button">
               Ver galería

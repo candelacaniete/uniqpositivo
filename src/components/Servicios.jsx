@@ -404,7 +404,7 @@ export default function Servicios() {
                   : 'cursor-not-allowed border border-line bg-ink/60 text-ash'
               }`}
             >
-              {isSubmitting ? 'Guardando...' : 'Reservar turno'}
+              {isSubmitting ? 'Guardando...' : 'Reservar turno en peluquería'}
             </button>
 
             {formMessage ? <p className="mt-4 rounded-2xl border border-line bg-ink/70 p-4 text-sm leading-6 text-ash">{formMessage}</p> : null}
