@@ -46,8 +46,9 @@ export default function AdminTurnos() {
   const [settingsMessage, setSettingsMessage] = useState('');
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const storageMode = getReservationStorageMode();
-  const configuredUser = import.meta.env.VITE_ADMIN_USER || 'admin';
-  const configuredPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin';
+  const configuredUser = (import.meta.env.VITE_ADMIN_USER || 'admin').trim().toLowerCase();
+  const configuredPassword = (import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin').trim();
+  const adminEnvConfigured = Boolean(import.meta.env.VITE_ADMIN_USER && import.meta.env.VITE_ADMIN_PASSWORD);
 
   const loadReservations = async () => {
     setIsLoading(true);
@@ -82,14 +83,21 @@ export default function AdminTurnos() {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    if (credentials.username === configuredUser && credentials.password === configuredPassword) {
+    const enteredUser = credentials.username.trim().toLowerCase();
+    const enteredPassword = credentials.password.trim();
+
+    if (enteredUser === configuredUser && enteredPassword === configuredPassword) {
       setAuthorized(true);
       window.sessionStorage.setItem('uniq_admin_session', 'active');
       setMessage('');
       return;
     }
 
-    setMessage('Usuario o contraseña incorrectos.');
+    setMessage(
+      adminEnvConfigured
+        ? 'Usuario o contraseña incorrectos. Revisá mayúsculas, espacios o caracteres extra.'
+        : 'Usuario o contraseña incorrectos. No hay credenciales privadas configuradas; en demo usá admin / uniq-admin.',
+    );
   };
 
   const handleLogout = () => {
