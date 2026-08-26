@@ -26,6 +26,10 @@ const shopSections = [
   },
 ];
 
+const shopWhatsappText = encodeURIComponent('Hola! Quiero reservar un turno para visitar Uniq y conocer la selección del local.');
+const shopWhatsappHref = `https://wa.me/541144045167?text=${shopWhatsappText}`;
+const mapsHref = 'https://www.google.com/maps/search/?api=1&query=Rondeau%203352%2C%20CABA';
+
 function ShopPreviewImage({ name, sectionTitle }) {
   const [extensionIndex, setExtensionIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
@@ -91,6 +95,21 @@ export default function ShopPreview() {
           </section>
         ))}
       </div>
+
+      <section className="shop-preview-cta">
+        <div>
+          <h2>¿Querés vivir la experiencia completa?</h2>
+          <p>Visitanos en Rondeau 3352, CABA.</p>
+          <div className="shop-preview-cta-actions">
+            <a className="editorial-button" href={shopWhatsappHref} target="_blank" rel="noreferrer">
+              Reservar turno
+            </a>
+            <a className="editorial-button" href={mapsHref} target="_blank" rel="noreferrer">
+              Ver dirección
+            </a>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
