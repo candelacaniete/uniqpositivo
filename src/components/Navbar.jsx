@@ -4,7 +4,7 @@ import UniqLogo from './UniqLogo.jsx';
 
 const navLinks = [
   { label: 'Reservar', href: '#servicios' },
-  { label: 'Galería', href: '#galeria-puente', special: true },
+  { label: 'Recorrer galería', href: '#galeria-puente', special: true },
   { label: 'Shop', href: '/shop' },
 ];
 
