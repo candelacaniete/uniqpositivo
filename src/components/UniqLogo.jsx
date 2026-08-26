@@ -5,10 +5,11 @@ export default function UniqLogo({ className = '', compact = false }) {
   const uniqueId = useId().replaceAll(':', '');
   const ringId = `uniqLogoRing-${uniqueId}`;
   const glowId = `uniqLogoGlow-${uniqueId}`;
+  const titleId = `uniqLogoTitle-${uniqueId}`;
 
   return (
-    <svg className={className} viewBox={viewBox} role="img" aria-labelledby="uniq-logo-title">
-      <title id="uniq-logo-title">Uniq Positivo</title>
+    <svg className={className} viewBox={viewBox} role="img" aria-labelledby={titleId}>
+      <title id={titleId}>Uniq Positivo</title>
       <defs>
         <linearGradient id={ringId} x1="12%" x2="88%" y1="90%" y2="10%">
           <stop offset="0%" stopColor="#9B4F35" />

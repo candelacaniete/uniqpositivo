@@ -69,7 +69,7 @@ export default function ShopPreview() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75 }}
         >
-          <p>Shop preview</p>
+          <p>Shop</p>
           <h1>Una selección para descubrir en Uniq.</h1>
           <span>
             Productos, accesorios, indumentaria y objetos elegidos para acompañar la experiencia del local. Sin venta online:

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-const brands = ["L'Oréal Professionnel", 'Kleno', 'Hairssimme', 'Fidelité', 'Caviar', 'Ossono', 'y otras'];
+const brands = ['MUV', 'Alunadas'];
 
 export default function Productos() {
   return (
@@ -13,7 +13,7 @@ export default function Productos() {
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Shop · Próximamente</p>
+          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Shop</p>
           <h2 className="editorial-section-title">Rituales para continuar en casa</h2>
           <p className="mx-auto mt-6 max-w-3xl leading-8 text-ash">
             Todos los productos que vendemos son seleccionados y probados en distintas personas con resultados favorables. Si los
@@ -26,6 +26,9 @@ export default function Productos() {
               </span>
             ))}
           </div>
+          <a href="/shop" className="editorial-button mt-8">
+            Ver selección
+          </a>
         </motion.div>
       </div>
     </section>

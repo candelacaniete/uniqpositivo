@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { getReservationStorageMode, listReservations, updateReservation } from '../lib/reservations.js';
 import { dayOptions, defaultBusinessSettings, getBusinessSettings, updateBusinessSettings } from '../lib/settings.js';
 
@@ -35,6 +36,7 @@ export default function AdminTurnos() {
   const [viewMode, setViewMode] = useState('day');
   const [reservations, setReservations] = useState([]);
   const [message, setMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [settings, setSettings] = useState(defaultBusinessSettings);
   const [settingsDraft, setSettingsDraft] = useState({
@@ -45,6 +47,7 @@ export default function AdminTurnos() {
   const [newTimeSlot, setNewTimeSlot] = useState('');
   const [settingsMessage, setSettingsMessage] = useState('');
   const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const storageMode = getReservationStorageMode();
   const configuredUser = (import.meta.env.VITE_ADMIN_USER || 'admin').trim().toLowerCase();
   const configuredPassword = (import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin').trim();
@@ -81,6 +84,13 @@ export default function AdminTurnos() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorized, date, viewMode]);
 
+  useEffect(() => {
+    if (!successMessage) return undefined;
+
+    const timeout = window.setTimeout(() => setSuccessMessage(''), 3600);
+    return () => window.clearTimeout(timeout);
+  }, [successMessage]);
+
   const handleLogin = (event) => {
     event.preventDefault();
     const enteredUser = credentials.username.trim().toLowerCase();
@@ -109,9 +119,11 @@ export default function AdminTurnos() {
 
   const handleUpdate = async (reservation, patch) => {
     setMessage('');
+    setSuccessMessage('');
     try {
       await updateReservation(reservation.id, patch);
       await loadReservations();
+      setSuccessMessage('Cambios guardados');
     } catch (error) {
       setMessage(error.message || 'No pudimos actualizar la reserva.');
     }
@@ -130,6 +142,7 @@ export default function AdminTurnos() {
       });
       setSettings(nextSettings);
       setSettingsMessage('Configuración guardada.');
+      setSuccessMessage('Cambios guardados');
     } catch (error) {
       setSettingsMessage(error.message || 'No pudimos guardar la configuración.');
     } finally {
@@ -191,14 +204,24 @@ export default function AdminTurnos() {
           </label>
           <label className="mt-5 block">
             <span className="mb-3 block text-sm font-semibold">Contraseña</span>
-            <input
-              type="password"
-              autoComplete="current-password"
-              className="w-full border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
-              value={credentials.password}
-              onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
-              placeholder={import.meta.env.VITE_ADMIN_PASSWORD ? 'Contraseña privada' : 'Demo: uniq-admin'}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                className="w-full border border-line bg-ink/80 px-4 py-4 pr-12 outline-none transition focus:border-moss"
+                value={credentials.password}
+                onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
+                placeholder={import.meta.env.VITE_ADMIN_PASSWORD ? 'Contraseña privada' : 'Demo: uniq-admin'}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-ash transition hover:text-cream"
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                onClick={() => setShowPassword((current) => !current)}
+              >
+                {showPassword ? <EyeOff size={20} strokeWidth={1.6} /> : <Eye size={20} strokeWidth={1.6} />}
+              </button>
+            </div>
           </label>
           <button className="mt-6 w-full border border-accent bg-transparent px-6 py-4 text-sm font-bold uppercase tracking-widest text-cream transition hover:border-cream hover:text-accent">
             Entrar
@@ -211,6 +234,7 @@ export default function AdminTurnos() {
 
   return (
     <main className="min-h-screen bg-ink px-4 py-8 text-cream md:px-8 md:py-10">
+      {successMessage ? <div className="admin-success-toast">{successMessage}</div> : null}
       <div className="mx-auto max-w-6xl">
         <div className="border-b border-line pb-8">
           <div>
