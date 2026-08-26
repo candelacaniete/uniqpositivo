@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const imageExtensions = ['jpg', 'png', 'webp'];
+const imageExtensions = ['jpeg', 'jpg', 'png', 'webp'];
 
 const shopSections = [
   {
