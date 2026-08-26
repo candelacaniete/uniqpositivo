@@ -4,7 +4,7 @@ import UniqLogo from './UniqLogo.jsx';
 
 const navLinks = [
   { label: 'Reservar', href: '#servicios' },
-  { label: 'Recorrer galería', href: '#galeria-puente', special: true },
+  { label: 'Galería', href: '#galeria-puente' },
   { label: 'Shop', href: '/shop' },
 ];
 
@@ -29,11 +29,6 @@ export default function Navbar() {
               className="group relative text-[0.72rem] font-bold uppercase tracking-[0.22em] text-ash transition hover:text-cream"
             >
               <span>{link.label}</span>
-              {link.special ? (
-                <span className="pointer-events-none absolute left-1/2 top-8 w-36 -translate-x-1/2 border border-line bg-night px-3 py-2 text-center text-xs normal-case tracking-normal text-ash opacity-0 transition group-hover:translate-y-1 group-hover:opacity-100">
-                  cruzar al arte
-                </span>
-              ) : null}
               <span className="absolute -bottom-2 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
