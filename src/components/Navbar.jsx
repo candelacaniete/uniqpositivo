@@ -4,7 +4,7 @@ import { Menu, UserRound, X } from 'lucide-react';
 const navLinks = [
   { label: 'Reservar', href: '#servicios' },
   { label: 'Galería', href: '#galeria-puente', special: true },
-  { label: 'Shop', href: '#productos' },
+  { label: 'Shop', href: '/shop' },
 ];
 
 export default function Navbar() {

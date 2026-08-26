@@ -757,6 +757,113 @@ select {
   color: #241913;
 }
 
+.shop-preview-page {
+  min-height: 100vh;
+}
+
+.shop-preview-hero {
+  display: grid;
+  min-height: 72svh;
+  place-items: center;
+  padding: 8rem 1.25rem 4rem;
+  text-align: center;
+}
+
+.shop-preview-hero > div {
+  max-width: 72rem;
+}
+
+.shop-preview-hero p,
+.shop-preview-heading p {
+  color: var(--color-ash);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.shop-preview-hero h1 {
+  margin-top: 1rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 600;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.shop-preview-hero span {
+  display: block;
+  max-width: 46rem;
+  margin: 1.8rem auto 0;
+  color: var(--color-ash);
+  line-height: 1.9;
+}
+
+.shop-preview-sections {
+  display: grid;
+  gap: 6rem;
+  padding: 0 1.25rem 8rem;
+}
+
+.shop-preview-block {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+  border-top: 1px solid var(--color-line);
+  padding-top: 2rem;
+}
+
+.shop-preview-heading {
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.shop-preview-heading h2 {
+  max-width: 42rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  font-weight: 500;
+  line-height: 0.98;
+}
+
+.shop-preview-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shop-preview-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background: var(--color-night);
+}
+
+.shop-preview-image,
+.shop-preview-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.shop-preview-placeholder {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background:
+    radial-gradient(ellipse at 38% 22%, rgba(248, 241, 231, 0.72), transparent 28%),
+    linear-gradient(135deg, rgba(190, 166, 138, 0.52), rgba(233, 220, 204, 0.82)),
+    #D7C8B8;
+  color: rgba(42, 36, 29, 0.5);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 @media (min-width: 768px) {
   .masonry {
     column-count: 2;
@@ -781,6 +888,10 @@ select {
 
   .editorial-actions {
     flex-direction: row;
+  }
+
+  .shop-preview-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -846,6 +957,15 @@ select {
 
   .review-slide {
     flex-basis: 33.333%;
+  }
+
+  .shop-preview-grid.items-15,
+  .shop-preview-grid.items-10 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .shop-preview-grid.items-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
