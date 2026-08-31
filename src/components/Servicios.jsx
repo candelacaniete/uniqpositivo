@@ -131,7 +131,7 @@ export default function Servicios() {
 
   return (
     <section id="servicios" className="section-shell bg-night px-5 py-24 md:px-8">
-      <img src="/brand/tulipan.png" alt="" className="tulip-mark tulip-mark-section" aria-hidden="true" />
+      <img src="/brand/uniq-logo.png" alt="" className="tulip-mark tulip-mark-section" aria-hidden="true" />
       <div className="mx-auto max-w-6xl">
         <motion.div
           className="mb-12 text-center"
