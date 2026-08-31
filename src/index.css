@@ -288,8 +288,8 @@ select {
 
 .editorial-actions {
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
+  align-items: center;
   gap: 0.9rem;
   justify-content: center;
   margin-top: 2.2rem;
@@ -300,6 +300,7 @@ select {
   align-items: center;
   justify-content: center;
   max-width: 100%;
+  width: min(100%, 26rem);
   border: 1px solid currentColor;
   border-radius: 0.7rem;
   padding: 0.95rem 1.65rem;
@@ -325,8 +326,6 @@ select {
 }
 
 .hero-shop-button {
-  flex-basis: 100%;
-  width: min(100%, 18rem);
   margin: 0 auto;
 }
 
@@ -942,10 +941,6 @@ select {
 
   .editorial-model-photo {
     object-position: center center;
-  }
-
-  .editorial-actions {
-    flex-direction: row;
   }
 
   .shop-preview-grid {
