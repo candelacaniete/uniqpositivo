@@ -88,6 +88,10 @@ select {
   filter: none;
 }
 
+.brand-full-logo {
+  filter: brightness(0) saturate(100%) invert(16%) sepia(14%) saturate(676%) hue-rotate(347deg) brightness(94%) contrast(90%);
+}
+
 .top-announcement-bar {
   background: #7A6250;
   color: #F8F1E7;
