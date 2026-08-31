@@ -1,0 +1,514 @@
+import { useEffect, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { getReservationStorageMode, listReservations, updateReservation } from '../lib/reservations.js';
+import { dayOptions, defaultBusinessSettings, getBusinessSettings, updateBusinessSettings } from '../lib/settings.js';
+
+function getToday() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function statusLabel(status) {
+  const labels = {
+    pending_deposit: 'Pendiente de seña',
+    confirmed: 'Confirmado',
+    cancelled: 'Cancelado',
+    rescheduled: 'Reprogramado',
+  };
+
+  return labels[status] || status;
+}
+
+function depositLabel(status) {
+  const labels = {
+    not_required: 'No requiere',
+    pending: 'Pendiente',
+    paid: 'Pagada',
+    failed: 'Fallida',
+  };
+
+  return labels[status] || status;
+}
+
+export default function AdminTurnos() {
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [authorized, setAuthorized] = useState(() => window.sessionStorage.getItem('uniq_admin_session') === 'active');
+  const [date, setDate] = useState(getToday());
+  const [viewMode, setViewMode] = useState('day');
+  const [reservations, setReservations] = useState([]);
+  const [message, setMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [settings, setSettings] = useState(defaultBusinessSettings);
+  const [settingsDraft, setSettingsDraft] = useState({
+    depositAlias: defaultBusinessSettings.depositAlias,
+    workingDays: defaultBusinessSettings.workingDays,
+    timeSlots: defaultBusinessSettings.timeSlots,
+  });
+  const [newTimeSlot, setNewTimeSlot] = useState('');
+  const [settingsMessage, setSettingsMessage] = useState('');
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const storageMode = getReservationStorageMode();
+  const configuredUser = (import.meta.env.VITE_ADMIN_USER || 'admin').trim().toLowerCase();
+  const configuredPassword = (import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin').trim();
+  const adminEnvConfigured = Boolean(import.meta.env.VITE_ADMIN_USER && import.meta.env.VITE_ADMIN_PASSWORD);
+
+  const loadReservations = async () => {
+    setIsLoading(true);
+    setMessage('');
+    try {
+      const data = await listReservations(viewMode === 'day' ? date : undefined);
+      setReservations(data);
+    } catch (error) {
+      setMessage(error.message || 'No pudimos cargar las reservas.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadSettings = async () => {
+    const nextSettings = await getBusinessSettings();
+    setSettings(nextSettings);
+    setSettingsDraft({
+      depositAlias: nextSettings.depositAlias,
+      workingDays: nextSettings.workingDays,
+      timeSlots: nextSettings.timeSlots,
+    });
+  };
+
+  useEffect(() => {
+    if (authorized) {
+      loadReservations();
+      loadSettings();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authorized, date, viewMode]);
+
+  useEffect(() => {
+    if (!successMessage) return undefined;
+
+    const timeout = window.setTimeout(() => setSuccessMessage(''), 3600);
+    return () => window.clearTimeout(timeout);
+  }, [successMessage]);
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    const enteredUser = credentials.username.trim().toLowerCase();
+    const enteredPassword = credentials.password.trim();
+
+    if (enteredUser === configuredUser && enteredPassword === configuredPassword) {
+      setAuthorized(true);
+      window.sessionStorage.setItem('uniq_admin_session', 'active');
+      setMessage('');
+      return;
+    }
+
+    setMessage(
+      adminEnvConfigured
+        ? 'Usuario o contraseña incorrectos. Revisá mayúsculas, espacios o caracteres extra.'
+        : 'Usuario o contraseña incorrectos. No hay credenciales privadas configuradas; en demo usá admin / uniq-admin.',
+    );
+  };
+
+  const handleLogout = () => {
+    window.sessionStorage.removeItem('uniq_admin_session');
+    setAuthorized(false);
+    setCredentials({ username: '', password: '' });
+    setReservations([]);
+  };
+
+  const handleUpdate = async (reservation, patch) => {
+    setMessage('');
+    setSuccessMessage('');
+    try {
+      await updateReservation(reservation.id, patch);
+      await loadReservations();
+      setSuccessMessage('Cambios guardados');
+    } catch (error) {
+      setMessage(error.message || 'No pudimos actualizar la reserva.');
+    }
+  };
+
+  const handleSettingsSave = async (event) => {
+    event.preventDefault();
+    setIsSavingSettings(true);
+    setSettingsMessage('');
+
+    try {
+      const nextSettings = await updateBusinessSettings({
+        depositAlias: settingsDraft.depositAlias,
+        workingDays: settingsDraft.workingDays,
+        timeSlots: settingsDraft.timeSlots,
+      });
+      setSettings(nextSettings);
+      setSettingsMessage('Configuración guardada.');
+      setSuccessMessage('Cambios guardados');
+    } catch (error) {
+      setSettingsMessage(error.message || 'No pudimos guardar la configuración.');
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
+  const toggleWorkingDay = (dayValue) => {
+    setSettingsDraft((current) => ({
+      ...current,
+      workingDays: current.workingDays.includes(dayValue)
+        ? current.workingDays.filter((value) => value !== dayValue)
+        : [...current.workingDays, dayValue],
+    }));
+  };
+
+  const addTimeSlot = () => {
+    if (!newTimeSlot || settingsDraft.timeSlots.includes(newTimeSlot)) return;
+
+    setSettingsDraft((current) => ({
+      ...current,
+      timeSlots: [...current.timeSlots, newTimeSlot].sort(),
+    }));
+    setNewTimeSlot('');
+  };
+
+  const removeTimeSlot = (slot) => {
+    setSettingsDraft((current) => ({
+      ...current,
+      timeSlots: current.timeSlots.filter((timeSlot) => timeSlot !== slot),
+    }));
+  };
+
+  const reservationsByTime = settings.timeSlots.map((time) => ({
+    time,
+    reservation: reservations.find((item) => item.time === time),
+  }));
+  const sortedReservations = [...reservations].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+
+  if (!authorized) {
+    return (
+      <main className="min-h-screen bg-ink px-5 py-24 text-cream md:px-8">
+        <form className="mx-auto max-w-md border border-line bg-night p-6 shadow-soft-card md:p-8" onSubmit={handleLogin}>
+          <p className="mb-4 text-sm uppercase tracking-widest text-ash">Admin turnos</p>
+          <h1 className="font-serif text-5xl font-semibold leading-none">Acceso interno</h1>
+          <p className="mt-4 text-sm leading-6 text-ash">
+            Ingresá con usuario y contraseña para ver reservas, confirmar turnos y controlar señas.
+          </p>
+          <label className="mt-8 block">
+            <span className="mb-3 block text-sm font-semibold">Usuario</span>
+            <input
+              type="text"
+              autoComplete="username"
+              className="w-full border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+              value={credentials.username}
+              onChange={(event) => setCredentials((current) => ({ ...current, username: event.target.value }))}
+              placeholder={import.meta.env.VITE_ADMIN_USER ? 'Usuario privado' : 'Demo: admin'}
+            />
+          </label>
+          <label className="mt-5 block">
+            <span className="mb-3 block text-sm font-semibold">Contraseña</span>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                className="w-full border border-line bg-ink/80 px-4 py-4 pr-12 outline-none transition focus:border-moss"
+                value={credentials.password}
+                onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
+                placeholder={import.meta.env.VITE_ADMIN_PASSWORD ? 'Contraseña privada' : 'Demo: uniq-admin'}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-ash transition hover:text-cream"
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                onClick={() => setShowPassword((current) => !current)}
+              >
+                {showPassword ? <EyeOff size={20} strokeWidth={1.6} /> : <Eye size={20} strokeWidth={1.6} />}
+              </button>
+            </div>
+          </label>
+          <button className="mt-6 w-full border border-accent bg-transparent px-6 py-4 text-sm font-bold uppercase tracking-widest text-cream transition hover:border-cream hover:text-accent">
+            Entrar
+          </button>
+          {message ? <p className="mt-4 text-sm text-ash">{message}</p> : null}
+        </form>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-ink px-4 py-8 text-cream md:px-8 md:py-10">
+      {successMessage ? <div className="admin-success-toast">{successMessage}</div> : null}
+      <div className="mx-auto max-w-6xl">
+        <div className="border-b border-line pb-8">
+          <div>
+            <p className="mb-3 text-sm uppercase tracking-widest text-ash">Panel interno</p>
+            <h1 className="font-serif text-5xl font-semibold leading-none md:text-7xl">Turnos y señas</h1>
+            <p className="mt-4 text-sm text-ash">
+              Modo: {storageMode === 'supabase' ? 'Supabase compartido' : 'demo local del navegador'}
+            </p>
+          </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
+            <div className="flex border border-line bg-night p-1">
+              <button
+                className={`flex-1 px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+                  viewMode === 'day' ? 'bg-moss text-night' : 'text-cream'
+                }`}
+                onClick={() => setViewMode('day')}
+              >
+                Día
+              </button>
+              <button
+                className={`flex-1 px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+                  viewMode === 'all' ? 'bg-moss text-night' : 'text-cream'
+                }`}
+                onClick={() => setViewMode('all')}
+              >
+                Todas
+              </button>
+            </div>
+            <input
+              type="date"
+              className="border border-line bg-night px-4 py-3 outline-none focus:border-moss"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+              disabled={viewMode === 'all'}
+            />
+            <button className="border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest transition hover:border-moss hover:text-moss" onClick={loadReservations}>
+              Actualizar
+            </button>
+            <button className="border border-line px-5 py-3 text-sm font-bold uppercase tracking-widest transition hover:border-terracotta hover:text-terracotta" onClick={handleLogout}>
+              Salir
+            </button>
+          </div>
+        </div>
+
+        {message ? <p className="mt-6 border border-line bg-night p-4 text-sm text-ash">{message}</p> : null}
+
+        <section className="mt-10 border border-line bg-night/90 p-5 shadow-soft-card md:p-7">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-ash">Configuración</p>
+            <h2 className="mt-1 font-serif text-4xl font-semibold">Agenda y señas</h2>
+          </div>
+
+          <form className="admin-settings-grid mt-6" onSubmit={handleSettingsSave}>
+            <label className="block">
+              <span className="mb-3 block text-sm font-semibold text-cream">Alias para señas</span>
+              <input
+                className="w-full border border-line bg-ink/80 px-4 py-4 outline-none transition focus:border-moss"
+                value={settingsDraft.depositAlias}
+                onChange={(event) => setSettingsDraft((current) => ({ ...current, depositAlias: event.target.value }))}
+                placeholder="alias.mp"
+              />
+            </label>
+
+            <fieldset>
+              <legend className="mb-3 text-sm font-semibold text-cream">Días laborales</legend>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
+                {dayOptions.map((day) => {
+                  const checked = settingsDraft.workingDays.includes(day.value);
+
+                  return (
+                    <button
+                      key={day.value}
+                      type="button"
+                      className={`border px-3 py-3 text-left text-xs font-bold uppercase tracking-widest transition ${
+                        checked ? 'border-moss bg-moss text-night' : 'border-line bg-ink/70 text-cream hover:border-moss hover:text-moss'
+                      }`}
+                      aria-pressed={checked}
+                      onClick={() => toggleWorkingDay(day.value)}
+                    >
+                      {day.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div>
+              <span className="mb-3 block text-sm font-semibold text-cream">Horarios</span>
+              <div className="flex gap-2">
+                <input
+                  type="time"
+                  className="min-w-0 flex-1 border border-line bg-ink/80 px-4 py-3 outline-none transition focus:border-moss"
+                  value={newTimeSlot}
+                  onChange={(event) => setNewTimeSlot(event.target.value)}
+                />
+                <button
+                  type="button"
+                  className="border border-line px-4 py-3 text-xs font-bold uppercase tracking-widest transition hover:border-moss hover:text-moss"
+                  onClick={addTimeSlot}
+                >
+                  Agregar
+                </button>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {settingsDraft.timeSlots.map((slot) => (
+                  <button
+                    key={slot}
+                    type="button"
+                    className="border border-line bg-ink/70 px-4 py-2 text-xs font-bold uppercase tracking-widest text-cream transition hover:border-terracotta hover:text-terracotta"
+                    onClick={() => removeTimeSlot(slot)}
+                    aria-label={`Quitar horario ${slot}`}
+                  >
+                    {slot} ×
+                  </button>
+                ))}
+              </div>
+              <span className="mt-2 block text-xs text-ash">Tocá un horario para quitarlo.</span>
+            </div>
+
+            <div className="lg:col-span-3">
+              <button className="border border-accent bg-transparent px-6 py-3 text-sm font-bold uppercase tracking-widest text-cream transition hover:border-cream hover:text-accent" disabled={isSavingSettings}>
+                {isSavingSettings ? 'Guardando...' : 'Guardar configuración'}
+              </button>
+              {settingsMessage ? <p className="mt-3 text-sm text-ash">{settingsMessage}</p> : null}
+            </div>
+          </form>
+        </section>
+
+        <section className="mt-10 border border-line bg-night/90 p-4 shadow-soft-card md:p-5">
+          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-ash">Reservas</p>
+              <h2 className="mt-1 font-serif text-4xl font-semibold">
+                {viewMode === 'day' ? `Reservas del ${date}` : 'Todas las reservas'}
+              </h2>
+            </div>
+            <p className="text-sm text-ash">{sortedReservations.length} reserva(s)</p>
+          </div>
+
+          <div className="mt-6 overflow-x-auto">
+            <table className="admin-reservations-table w-full border-separate border-spacing-y-3 text-left text-sm">
+              <thead>
+                <tr className="text-xs uppercase tracking-widest text-ash">
+                  <th className="px-4 py-2">Servicio</th>
+                  <th className="px-4 py-2">Clienta</th>
+                  <th className="px-4 py-2">Fecha</th>
+                  <th className="px-4 py-2">Hora</th>
+                  <th className="px-4 py-2">Turno</th>
+                  <th className="px-4 py-2">Pago/seña</th>
+                  <th className="px-4 py-2">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedReservations.length > 0 ? (
+                  sortedReservations.map((reservation) => (
+                    <tr key={reservation.id} className="bg-ink/70">
+                      <td className="px-4 py-4 md:rounded-l-2xl">
+                        <p className="font-semibold text-cream">{reservation.serviceName}</p>
+                        <p className="mt-1 text-xs text-ash">
+                          {reservation.servicePrice}
+                          {reservation.serviceDeposit ? ` · Seña ${reservation.serviceDeposit}` : ''}
+                        </p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="font-semibold text-cream">{reservation.clientName}</p>
+                        <p className="mt-1 text-xs text-ash">
+                          {reservation.clientPhone}
+                          {reservation.clientEmail ? ` · ${reservation.clientEmail}` : ''}
+                          {reservation.clientDni ? ` · DNI ${reservation.clientDni}` : ''}
+                          {reservation.clientInstagram ? ` · ${reservation.clientInstagram}` : ''}
+                        </p>
+                      </td>
+                      <td className="px-4 py-4 text-cream">{reservation.date}</td>
+                      <td className="px-4 py-4 text-cream">{reservation.time}</td>
+                      <td className="px-4 py-4">
+                        <span className="rounded-full border border-line px-3 py-1 text-xs font-bold uppercase tracking-widest text-cream">
+                          {statusLabel(reservation.status)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="rounded-full border border-line px-3 py-1 text-xs font-bold uppercase tracking-widest text-cream">
+                          {depositLabel(reservation.depositStatus)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 md:rounded-r-2xl">
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            className="border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
+                            onClick={() => handleUpdate(reservation, { depositStatus: 'paid', status: 'confirmed' })}
+                          >
+                            Seña pagada
+                          </button>
+                          <button
+                            className="border border-line px-3 py-2 text-xs font-bold uppercase tracking-widest hover:border-terracotta hover:text-terracotta"
+                            onClick={() => handleUpdate(reservation, { status: 'cancelled' })}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td className="bg-ink/70 px-4 py-6 text-center text-ash" colSpan={7}>
+                      No hay reservas para esta vista.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {viewMode === 'day' ? (
+          <section className="mt-10">
+            <p className="mb-4 text-xs font-bold uppercase tracking-widest text-ash">Agenda por horario</p>
+            <div className="grid gap-4">
+              {reservationsByTime.map(({ time, reservation }) => (
+                <article key={time} className="border border-line bg-night/90 p-5 shadow-soft-card">
+                  <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-ash">{time}</p>
+                      {reservation ? (
+                        <>
+                          <h2 className="mt-2 font-serif text-3xl font-semibold">{reservation.serviceName}</h2>
+                          <p className="mt-2 text-sm leading-6 text-ash">
+                            {reservation.clientName} · {reservation.clientPhone}
+                            {reservation.clientEmail ? ` · ${reservation.clientEmail}` : ''}
+                            {reservation.clientDni ? ` · DNI ${reservation.clientDni}` : ''}
+                            {reservation.clientInstagram ? ` · ${reservation.clientInstagram}` : ''}
+                          </p>
+                          <p className="mt-2 text-sm leading-6 text-ash">
+                            {reservation.servicePrice}
+                            {reservation.serviceDeposit ? ` · Seña ${reservation.serviceDeposit}` : ''} · {statusLabel(reservation.status)} · Seña{' '}
+                            {depositLabel(reservation.depositStatus)}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="mt-2 text-sm text-ash">Horario libre</p>
+                      )}
+                    </div>
+
+                    {reservation ? (
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          className="border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
+                          onClick={() => handleUpdate(reservation, { depositStatus: 'paid', status: 'confirmed' })}
+                        >
+                          Seña pagada
+                        </button>
+                        <button
+                          className="border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-moss hover:text-moss"
+                          onClick={() => handleUpdate(reservation, { status: 'confirmed' })}
+                        >
+                          Confirmar
+                        </button>
+                        <button
+                          className="border border-line px-4 py-2 text-xs font-bold uppercase tracking-widest hover:border-terracotta hover:text-terracotta"
+                          onClick={() => handleUpdate(reservation, { status: 'cancelled' })}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {isLoading ? <p className="mt-6 text-sm text-ash">Cargando reservas...</p> : null}
+      </div>
+    </main>
+  );
+}
