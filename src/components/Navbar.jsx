@@ -17,7 +17,7 @@ export default function Navbar() {
       </div>
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-5 md:px-8">
         <a href="#hero" className="shrink-0" aria-label="Ir al inicio">
-          <img src="/brand/uniq-logo-full.png" alt="Uniq Positivo" className="brand-full-logo h-14 w-36 object-contain" />
+          <img src="/brand/uniq-logo-navbar.png" alt="Uniq Positivo" className="brand-full-logo h-16 w-48 object-contain" />
         </a>
 
         <div className="hidden flex-1 items-center justify-center gap-6 md:flex">
