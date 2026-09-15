@@ -1,5 +1,27 @@
 @import "tailwindcss";
-@config "../tailwind.config.js";
+
+@theme {
+  --color-ink: #EFE6D8;
+  --color-night: #F8F1E7;
+  --color-cream: #2A241D;
+  --color-warm: #C8B7A2;
+  --color-ash: #7B6E60;
+  --color-line: #D8C8B8;
+  --color-orange: #9B765E;
+  --color-magenta: #B69B73;
+  --color-violet: #D6C4A3;
+  --color-moss: #6F715F;
+  --color-earth: #2A241D;
+  --color-terracotta: #9B765E;
+  --color-sand: #EFE6D8;
+  --color-accent: #B69B73;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Libre Baskerville", Georgia, serif;
+  --font-script: Allura, cursive;
+  --background-image-soft-radial: radial-gradient(circle at center, rgba(182, 155, 115, 0.12), transparent 58%);
+  --shadow-glow: 0 14px 38px rgba(42, 36, 29, 0.08);
+  --shadow-soft-card: 0 24px 60px rgba(42, 36, 29, 0.08);
+}
 
 :root {
   color-scheme: light;
@@ -15,6 +37,10 @@
   --accent-magenta: #B69B73;
   --accent-violet: #B69B73;
   --accent-gradient: linear-gradient(135deg, var(--accent-orange), var(--accent-magenta), var(--accent-violet));
+}
+
+.bg-accent {
+  background-image: var(--accent-gradient);
 }
 
 * {
