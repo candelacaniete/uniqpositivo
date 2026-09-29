@@ -7,6 +7,10 @@ function getToday() {
   return new Date().toISOString().split('T')[0];
 }
 
+function cleanCredential(value) {
+  return String(value || '').trim().replace(/^['"]|['"]$/g, '');
+}
+
 function statusLabel(status) {
   const labels = {
     pending_deposit: 'Pendiente de seña',
@@ -49,8 +53,8 @@ export default function AdminTurnos() {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const storageMode = getReservationStorageMode();
-  const configuredUser = (import.meta.env.VITE_ADMIN_USER || 'admin').trim().toLowerCase();
-  const configuredPassword = (import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin').trim();
+  const configuredUser = cleanCredential(import.meta.env.VITE_ADMIN_USER || 'admin').toLowerCase();
+  const configuredPassword = cleanCredential(import.meta.env.VITE_ADMIN_PASSWORD || 'uniq-admin');
   const adminEnvConfigured = Boolean(import.meta.env.VITE_ADMIN_USER && import.meta.env.VITE_ADMIN_PASSWORD);
 
   const loadReservations = async () => {
@@ -67,13 +71,18 @@ export default function AdminTurnos() {
   };
 
   const loadSettings = async () => {
-    const nextSettings = await getBusinessSettings();
-    setSettings(nextSettings);
-    setSettingsDraft({
-      depositAlias: nextSettings.depositAlias,
-      workingDays: nextSettings.workingDays,
-      timeSlots: nextSettings.timeSlots,
-    });
+    setSettingsMessage('');
+    try {
+      const nextSettings = await getBusinessSettings();
+      setSettings(nextSettings);
+      setSettingsDraft({
+        depositAlias: nextSettings.depositAlias,
+        workingDays: nextSettings.workingDays,
+        timeSlots: nextSettings.timeSlots,
+      });
+    } catch (error) {
+      setSettingsMessage(error.message || 'No pudimos cargar la configuración desde Supabase.');
+    }
   };
 
   useEffect(() => {
@@ -93,8 +102,8 @@ export default function AdminTurnos() {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    const enteredUser = credentials.username.trim().toLowerCase();
-    const enteredPassword = credentials.password.trim();
+    const enteredUser = cleanCredential(credentials.username).toLowerCase();
+    const enteredPassword = cleanCredential(credentials.password);
 
     if (enteredUser === configuredUser && enteredPassword === configuredPassword) {
       setAuthorized(true);

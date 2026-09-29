@@ -18,6 +18,14 @@ const cardVariants = {
 };
 
 const SERVICES_PER_PAGE = 5;
+const WHATSAPP_PHONE = '541144045167';
+
+function buildWhatsappHref({ selectedService, date, time, clientName, clientPhone, clientEmail, clientDni, settings }) {
+  const depositText = selectedService.deposit ? ` Seña: ${selectedService.deposit}.` : '';
+  const aliasText = selectedService.depositAmount ? ` Alias para seña: ${settings.depositAlias}.` : '';
+  const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText}${aliasText} Duración aproximada: ${selectedService.duration}. Mis datos: ${clientName}, teléfono ${clientPhone}, mail ${clientEmail}, DNI ${clientDni}.`;
+  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+}
 
 export default function Servicios() {
   const [selectedService, setSelectedService] = useState(services[0]);
@@ -39,10 +47,7 @@ export default function Servicios() {
   const selectedDateIsWorkingDay = isWorkingDay(date, settings.workingDays);
   const isComplete = Boolean(selectedService && date && time && clientName && clientPhone && clientEmail && clientDni && selectedDateIsWorkingDay);
   const whatsappHref = useMemo(() => {
-    const depositText = selectedService.deposit ? ` Seña: ${selectedService.deposit}.` : '';
-    const aliasText = selectedService.depositAmount ? ` Alias para seña: ${settings.depositAlias}.` : '';
-    const text = `Hola! Reservé ${selectedService.name} el ${date} a las ${time}. Valor: ${selectedService.price}.${depositText}${aliasText} Duración aproximada: ${selectedService.duration}. Mis datos: ${clientName}, teléfono ${clientPhone}, mail ${clientEmail}, DNI ${clientDni}.`;
-    return `https://wa.me/541144045167?text=${encodeURIComponent(text)}`;
+    return buildWhatsappHref({ selectedService, date, time, clientName, clientPhone, clientEmail, clientDni, settings });
   }, [clientDni, clientEmail, clientName, clientPhone, date, selectedService, settings.depositAlias, time]);
 
   const SelectedIcon = selectedService.Icon;
@@ -67,9 +72,15 @@ export default function Servicios() {
 
   useEffect(() => {
     let ignore = false;
-    getBusinessSettings().then((nextSettings) => {
-      if (!ignore) setSettings(nextSettings);
-    });
+    getBusinessSettings()
+      .then((nextSettings) => {
+        if (!ignore) setSettings(nextSettings);
+      })
+      .catch((error) => {
+        if (!ignore) {
+          setFormMessage(error.message || 'No pudimos cargar los horarios disponibles. Intentá de nuevo.');
+        }
+      });
 
     return () => {
       ignore = true;
@@ -115,6 +126,17 @@ export default function Servicios() {
         clientInstagram,
       });
 
+      const confirmationHref = buildWhatsappHref({
+        selectedService,
+        date,
+        time,
+        clientName,
+        clientPhone,
+        clientEmail,
+        clientDni,
+        settings,
+      });
+
       setReservation(createdReservation);
       setFormMessage(
         selectedService.depositAmount
@@ -122,6 +144,7 @@ export default function Servicios() {
           : 'Turno confirmado y guardado.',
       );
       setBookedTimes((currentTimes) => [...new Set([...currentTimes, time])]);
+      window.location.assign(confirmationHref);
     } catch (error) {
       setFormMessage(error.message || 'No pudimos guardar el turno. Intentá con otro horario.');
     } finally {
@@ -404,7 +427,7 @@ export default function Servicios() {
                   : 'cursor-not-allowed border border-line bg-ink/60 text-ash'
               }`}
             >
-              {isSubmitting ? 'Guardando...' : 'Reservar turno en peluquería'}
+              {isSubmitting ? 'Guardando...' : 'Reservar y confirmar por WhatsApp'}
             </button>
 
             {formMessage ? <p className="mt-4 rounded-2xl border border-line bg-ink/70 p-4 text-sm leading-6 text-ash">{formMessage}</p> : null}

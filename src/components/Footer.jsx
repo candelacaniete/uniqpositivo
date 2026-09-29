@@ -37,7 +37,7 @@ export default function Footer() {
             <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">Horarios</p>
           </div>
           <div>
-            <a className="transition hover:text-cream" href="/admin-turnos">
+            <a className="transition hover:text-cream" href="/admin">
               Acceso admin
             </a>
             <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-ash">Interno</p>

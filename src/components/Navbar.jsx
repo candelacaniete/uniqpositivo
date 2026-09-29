@@ -34,7 +34,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden shrink-0 items-center justify-end gap-5 md:flex">
-          <a href="/admin-turnos" aria-label="Acceso admin">
+          <a href="/admin" aria-label="Acceso admin">
             <UserRound size={18} strokeWidth={1.4} className="text-ash transition hover:text-cream" />
           </a>
         </div>
@@ -64,7 +64,7 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              href="/admin-turnos"
+              href="/admin"
               className="border border-line bg-ink px-4 py-3 text-xs font-bold uppercase tracking-[0.2em] text-cream"
               onClick={() => setIsOpen(false)}
             >

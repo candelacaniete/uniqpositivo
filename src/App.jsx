@@ -12,7 +12,7 @@ import ShopPreview from './components/ShopPreview.jsx';
 export default function App() {
   const normalizedPath = window.location.pathname.replace(/\/$/, '') || '/';
   const isGalleryPage = normalizedPath === '/galeria';
-  const isAdminPage = normalizedPath === '/admin-turnos';
+  const isAdminPage = normalizedPath === '/admin' || normalizedPath === '/admin-turnos';
   const isShopPage = normalizedPath === '/shop';
 
   const handleHeroGalleryClick = () => {

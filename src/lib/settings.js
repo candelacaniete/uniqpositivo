@@ -19,11 +19,21 @@ export const defaultBusinessSettings = {
   timeSlots: ['10:00', '11:30', '13:00', '15:00', '16:30', '18:00'],
 };
 
+function normalizeNumberArray(value, fallback) {
+  const numbers = Array.isArray(value) ? value.map(Number).filter(Number.isFinite) : fallback;
+  return [...new Set(numbers)].sort((a, b) => a - b);
+}
+
+function normalizeTimeSlots(value, fallback) {
+  const slots = Array.isArray(value) ? value : fallback;
+  return [...new Set(slots.map((slot) => String(slot).trim()).filter(Boolean))].sort();
+}
+
 function normalizeSettings(row) {
   return {
     depositAlias: row.deposit_alias || defaultBusinessSettings.depositAlias,
-    workingDays: row.working_days || defaultBusinessSettings.workingDays,
-    timeSlots: row.time_slots || defaultBusinessSettings.timeSlots,
+    workingDays: normalizeNumberArray(row.working_days, defaultBusinessSettings.workingDays),
+    timeSlots: normalizeTimeSlots(row.time_slots, defaultBusinessSettings.timeSlots),
   };
 }
 
@@ -49,8 +59,7 @@ export async function getBusinessSettings() {
     if (!error && data) return normalizeSettings(data);
     if (!error && !data) return defaultBusinessSettings;
 
-    // If the settings table has not been created yet, keep the app usable with defaults.
-    return defaultBusinessSettings;
+    throw new Error(error.message || 'No pudimos cargar la configuración de horarios desde Supabase.');
   }
 
   return readLocalSettings();
@@ -59,9 +68,17 @@ export async function getBusinessSettings() {
 export async function updateBusinessSettings(settings) {
   const normalized = {
     depositAlias: settings.depositAlias?.trim() || defaultBusinessSettings.depositAlias,
-    workingDays: [...new Set(settings.workingDays.map(Number))].sort(),
-    timeSlots: settings.timeSlots.map((slot) => slot.trim()).filter(Boolean),
+    workingDays: normalizeNumberArray(settings.workingDays, defaultBusinessSettings.workingDays),
+    timeSlots: normalizeTimeSlots(settings.timeSlots, []),
   };
+
+  if (!normalized.workingDays.length) {
+    throw new Error('Seleccioná al menos un día laboral.');
+  }
+
+  if (!normalized.timeSlots.length) {
+    throw new Error('Agregá al menos un horario disponible.');
+  }
 
   if (isSupabaseConfigured) {
     const { data, error } = await supabase
@@ -72,7 +89,7 @@ export async function updateBusinessSettings(settings) {
         working_days: normalized.workingDays,
         time_slots: normalized.timeSlots,
         updated_at: new Date().toISOString(),
-      })
+      }, { onConflict: 'id' })
       .select('*')
       .single();
 
