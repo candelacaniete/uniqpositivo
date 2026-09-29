@@ -1,0 +1,38 @@
+{
+  "name": "uniqpositivo",
+  "version": "1.0.0",
+  "description": "Landing page de Uniq Positivo",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/candelacaniete/uniqpositivo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/candelacaniete/uniqpositivo/issues"
+  },
+  "homepage": "https://github.com/candelacaniete/uniqpositivo#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "@tailwindcss/postcss": "^4.3.1",
+    "@vitejs/plugin-react": "^6.0.2",
+    "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.40.0",
+    "lucide-react": "^1.21.0",
+    "postcss": "^8.5.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^4.3.1",
+    "vite": "^8.0.16"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.0"
+  }
+}
